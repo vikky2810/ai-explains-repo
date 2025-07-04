@@ -63,7 +63,13 @@ export default function Home() {
         </button>
       </div>
 
-      {explanation && (
+      {loading && (
+        <div className="flex justify-center mt-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-400"></div>
+        </div>
+      )}
+
+      {explanation && !loading && (
         <div className="max-w-xl mx-auto mt-12 space-y-6">
           <Section title="🧠 Summary" markdown={explanation} />
         </div>

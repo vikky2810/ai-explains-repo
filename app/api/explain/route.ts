@@ -44,22 +44,22 @@ export async function POST(req: NextRequest) {
     const geminiRes = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
       {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-goog-api-key": process.env.GEMINI_API_KEY || "",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `Explain this GitHub project in simple terms and in short in 500 wokrds  :\n\n${trimmedReadme}`,
-                },
-              ],
-            },
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-goog-api-key": process.env.GEMINI_API_KEY || "",
+      },
+      body: JSON.stringify({
+        contents: [
+        {
+          parts: [
+          {
+            text: `You are an expert software engineer. Read the following GitHub README and provide a clear, concise summary of what this project does, its main features, and its intended use case. Explain it in simple terms for someone new to the project, using no more than 300 words. Avoid copying text verbatim from the README. Focus on the purpose, how it works, and why someone might use it.\n\nREADME:\n${trimmedReadme}`,
+          },
           ],
-        }),
+        },
+        ],
+      }),
       }
     );
 
