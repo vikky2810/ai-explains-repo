@@ -1,3 +1,5 @@
+import { log } from "console";
+import { url } from "inspector";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -30,6 +32,17 @@ export async function POST(req: NextRequest) {
         },
       }
     );
+
+    // Fetch repo metadata
+    const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`)
+    const repoData = await repoRes.json();
+    
+    const metadata = {
+      name: repoData.full_name,
+      stars : repoData.stargazers_count,
+      forks: repoData.forks_count,
+      url: repoData.html_url
+    }
 
     if (!readmeRes.ok) {
       return NextResponse.json(
@@ -69,7 +82,7 @@ export async function POST(req: NextRequest) {
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Explanation not available.";
 
-    return NextResponse.json({ explanation: result });
+    return NextResponse.json({ explanation: result ,metadata});
   } catch (error) {
     console.error("Server error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

@@ -7,6 +7,7 @@ export default function Home() {
   const [repoUrl, setRepoUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [explanation, setExplanation] = useState("");
+  const [metadata, setMetadata] = useState<any>(null);
 
   const handleExplain = async () => {
     if (!repoUrl) return;
@@ -26,12 +27,15 @@ export default function Home() {
       const data = await res.json();
       if (data.explanation) {
         setExplanation(data.explanation);
+        setMetadata(data.metadata);
       } else {
         setExplanation("Could not generate explanation.");
+        setMetadata(null);
       }
     } catch (error) {
       console.error(error);
       setExplanation("Something went wrong.");
+      setMetadata(null);
     } finally {
       setLoading(false);
     }
@@ -69,12 +73,47 @@ export default function Home() {
         </div>
       )}
 
-      {explanation && !loading && (
-        <div className="max-w-xl mx-auto mt-12 space-y-6">
-          <Section title="🧠 Summary" markdown={explanation} />
+      {metadata && !loading && (
+        <div className="max-w-xl mx-auto mt-12 mb-4 p-4 rounded-lg bg-slate-800 flex flex-col gap-2">
+          <a href={metadata.url} target={"_blank"} rel="noopener noreferrer" className="text-lg font-bold text-indigo-400 hover:underline">
+            {metadata.name}
+          </a>
+          <p className="text-slate-300">{metadata.description}</p>
+          <div className="flex gap-6 mt-2">
+            <span>⭐ {metadata.stars}</span>
+            <span>🍴 {metadata.forks}</span>
+          </div>
+        </div>
+      )}
+      
+
+      {(explanation || metadata) && !loading && (
+        <div className="max-w-xl mx-auto mt-12">
+              {metadata && (
+              <div className="p-4 rounded-t-lg bg-slate-800 flex flex-col ">
+                <a
+                  href={metadata.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg font-bold text-indigo-400 hover:underline"
+                >
+                  {metadata.name}
+                </a>
+                <p className="text-slate-300">{metadata.description}</p>
+                <div className="flex gap-6 mt-2">
+                  <span>⭐ {metadata.stars}</span>
+                  <span>🍴 {metadata.forks}</span>
+                </div>
+              </div>
+            )}
+          {explanation && (
+            <Section title="🧠 Summary" markdown={explanation} />
+          )}
         </div>
       )}
     </div>
+
+
   );
 }
 
@@ -85,7 +124,7 @@ interface SectionProps {
 
 function Section({ title, markdown }: SectionProps) {
   return (
-    <div className="bg-slate-800 p-6 rounded-xl shadow-md">
+    <div className="bg-slate-800 p-6 rounded-b-xl shadow-md">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
       <div className="prose prose-invert max-w-none text-slate-300">
         <ReactMarkdown>{markdown}</ReactMarkdown>
