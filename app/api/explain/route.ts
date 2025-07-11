@@ -35,6 +35,10 @@ export async function POST(req: NextRequest) {
 
     // Fetch repo metadata
     const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`)
+
+    if (!repoRes.ok) {
+      return NextResponse.json({ error: "Repository not found or it's private." }, { status: 404 });
+    }
     const repoData = await repoRes.json();
     
     const metadata = {
@@ -46,7 +50,7 @@ export async function POST(req: NextRequest) {
 
     if (!readmeRes.ok) {
       return NextResponse.json(
-        { error: "Could not fetch README" },
+        { error: "README not found or inaccessible." },
         { status: 500 }
       );
     }
