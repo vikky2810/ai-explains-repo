@@ -8,10 +8,12 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [explanation, setExplanation] = useState("");
   const [metadata, setMetadata] = useState<any>(null);
+  const [error, setError] = useState("");
+
 
   const handleExplain = async () => {
     if (!repoUrl) return;
-
+    setError("");
     setLoading(true);
     setExplanation("");
 
@@ -25,6 +27,10 @@ export default function Home() {
       });
 
       const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Something went wrong.");
+        return;
+      }
       if (data.explanation) {
         setExplanation(data.explanation);
         setMetadata(data.metadata);
