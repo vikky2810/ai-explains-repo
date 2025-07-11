@@ -79,6 +79,13 @@ export default function Home() {
         </div>
       )}
 
+      {error && (
+        <div className="max-w-xl mx-auto mt-8 bg-red-600 text-white p-4 rounded-lg shadow">
+          ❗ {error}
+        </div>
+      )}
+
+
       {metadata && !loading && (
         <div className="max-w-xl mx-auto mt-12 mb-4 p-4 rounded-lg bg-slate-800 flex flex-col gap-2">
           <a href={metadata.url} target={"_blank"} rel="noopener noreferrer" className="text-lg font-bold text-indigo-400 hover:underline">
@@ -116,6 +123,8 @@ export default function Home() {
             <Section title="🧠 Summary" markdown={explanation} />
           )}
         </div>
+
+        
       )}
     </div>
 
