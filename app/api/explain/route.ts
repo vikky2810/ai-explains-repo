@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
     
     const metadata = {
       name: repoData.full_name,
+      description: repoData.description,
       stars : repoData.stargazers_count,
       forks: repoData.forks_count,
       url: repoData.html_url,
