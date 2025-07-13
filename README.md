@@ -13,6 +13,25 @@ Just paste a GitHub repo link, hit the button, and boom — you get a summary th
 - **AI Magic:**  
   The backend sends the README to Google's Gemini AI model, which spits out a short, easy-to-read explanation.
 
+
+# Project Structure 
+
+```
+ai-explains-repo/
+├── app/
+│   ├── api/
+│   │   └── explain/
+│   │       └── route.ts      # API route for explaining repos
+│   └── page.tsx              # Main frontend page
+├── .env                      # Gemini API key (not committed)
+├── package.json
+├── pnpm-lock.yaml
+├── tailwind.config.js
+├── tsconfig.json
+├── README.md
+
+```
+
 ## 🛠️ How To Use
 
 1. Clone this repo:
