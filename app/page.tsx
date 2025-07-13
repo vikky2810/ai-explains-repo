@@ -10,7 +10,6 @@ export default function Home() {
   const [metadata, setMetadata] = useState<any>(null);
   const [error, setError] = useState("");
 
-
   const handleExplain = async () => {
     if (!repoUrl) return;
     setError("");
@@ -47,11 +46,16 @@ export default function Home() {
     }
   };
 
+  const handleReset = () => {
+    setRepoUrl("");
+    setExplanation("");
+    setMetadata(null);
+    setError("");
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 text-white px-6 py-12">
-      <h1 className="text-3xl font-bold text-center mb-2">
-        AI Explains This Repo
-      </h1>
+      <h1 className="text-3xl font-bold text-center mb-2">AI Explains This Repo</h1>
       <p className="text-center text-slate-400 mb-8">
         Paste any GitHub repo URL and get a human-friendly explanation
       </p>
@@ -61,6 +65,9 @@ export default function Home() {
           type="text"
           value={repoUrl}
           onChange={(e) => setRepoUrl(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleExplain();
+          }}
           placeholder="https://github.com/user/repo"
           className="p-4 rounded-lg bg-slate-800 text-white outline-none"
         />
@@ -73,51 +80,61 @@ export default function Home() {
         </button>
       </div>
 
+      {/* Loading Spinner */}
       {loading && (
         <div className="flex justify-center mt-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-400"></div>
         </div>
       )}
 
+      {/* Error Message */}
       {error && (
         <div className="max-w-xl mx-auto mt-8 bg-red-600 text-white p-4 rounded-lg shadow">
           ❗ {error}
         </div>
       )}
-     
 
+      {/* Metadata + Explanation */}
       {(explanation || metadata) && !loading && (
         <div className="max-w-xl mx-auto mt-12">
-              {metadata && (
-              <div className="p-4 rounded-t-lg bg-slate-800 flex flex-col ">
-                <a
-                  href={metadata.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-lg font-bold text-indigo-400 hover:underline"
-                >
-                  {metadata.name}
-                </a>
-                <p className="text-slate-300">{metadata.description}</p>
-                <div className="flex gap-6 mt-2">
-                  <span>⭐ {metadata.stars}</span>
-                  <span>🍴 {metadata.forks}</span>
-                  {metadata.lastCommitDate && (
-                    <span>🕒 Last commit: {new Date(metadata.lastCommitDate).toLocaleDateString()}</span>
-                  )}
-                </div>
+          {metadata && (
+            <div className="p-4 rounded-t-lg bg-slate-800 flex flex-col">
+              <a
+                href={metadata.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg font-bold text-indigo-400 hover:underline"
+              >
+                {metadata.name}
+              </a>
+              <p className="text-slate-300">{metadata.description}</p>
+              <div className="flex gap-6 mt-2">
+                <span>⭐ {metadata.stars}</span>
+                <span>🍴 {metadata.forks}</span>
+                {metadata.lastCommitDate && (
+                  <span>
+                    🕒 Last commit:{" "}
+                    {new Date(metadata.lastCommitDate).toLocaleDateString()}
+                  </span>
+                )}
               </div>
-            )}
-          {explanation && (
-            <Section title="🧠 Summary" markdown={explanation} />
+            </div>
           )}
-        </div>
 
-        
+          {explanation && <Section title="🧠 Summary" markdown={explanation} />}
+
+          {/* Reset button */}
+          <div className="text-center mt-4">
+            <button
+              onClick={handleReset}
+              className="text-indigo-400 hover:underline text-sm"
+            >
+              🔄 Explain another repo
+            </button>
+          </div>
+        </div>
       )}
     </div>
-
-
   );
 }
 
@@ -125,14 +142,72 @@ interface SectionProps {
   title: string;
   markdown: string;
 }
+export function Section({ title, markdown }: SectionProps) {
+  const sections = splitMarkdownSections(markdown);
 
-function Section({ title, markdown }: SectionProps) {
   return (
-    <div className="bg-slate-800 p-6 rounded-b-xl shadow-md">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="prose prose-invert max-w-none text-slate-300">
-        <ReactMarkdown>{markdown}</ReactMarkdown>
-      </div>
+    <div className="bg-slate-800/70 p-6 rounded-xl shadow-xl space-y-6 mt-6 border border-slate-700">
+      <h2 className="text-2xl font-bold text-white">{title}</h2>
+
+      {sections.map((sec, i) => (
+        <div
+          key={i}
+          className={`rounded-lg p-4 prose prose-invert max-w-none text-slate-200 ${
+            sectionColorClass(sec.heading)
+          }`}
+        >
+          <ReactMarkdown
+  components={{
+              h2: ({ children }) => (
+                <h2 className="text-2xl font-bold mb-3">{children}</h2>
+              ),
+            }}
+          >
+            {`## ${boldHeading(sec.heading)}\n${sec.content}`}
+          </ReactMarkdown>
+
+        </div>
+      ))}
     </div>
   );
+}
+
+// Split markdown into sections based on ## Heading
+function splitMarkdownSections(markdown: string) {
+  const regex = /^##\s+(.*)$/gm;
+  const matches = [...markdown.matchAll(regex)];
+
+  const sections = matches.map((match, index) => {
+    const start = match.index!;
+    const end = matches[index + 1]?.index ?? markdown.length;
+    const heading = match[1].trim();
+    const content = markdown.slice(start, end).replace(match[0], "").trim();
+    return { heading, content };
+  });
+
+  return sections;
+}
+
+
+// Background color by heading type
+function sectionColorClass(heading: string): string {
+  const h = heading.toLowerCase();
+  if (h.includes("tl;dr")) return "bg-yellow-900/30";
+  if (h.includes("what this project")) return "bg-blue-900/30";
+  if (h.includes("key feature")) return "bg-green-900/30";
+  if (h.includes("intended use")) return "bg-pink-900/30";
+  return "bg-slate-700/40";
+}
+
+
+function boldHeading(heading: string): string {
+  const match = heading.toLowerCase();
+  if (
+    match.includes("tl;dr") ||
+    match.includes("what this project") ||
+    match.includes("key feature")
+  ) {
+    return `**${heading}**`;
+  }
+  return heading;
 }

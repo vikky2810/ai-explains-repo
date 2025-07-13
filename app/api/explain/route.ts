@@ -85,7 +85,18 @@ export async function POST(req: NextRequest) {
         {
           parts: [
           {
-            text: `You are an expert software engineer. Read the following GitHub README and provide a clear, concise summary of what this project does, its main features, and its intended use case. Explain it in simple terms for someone new to the project, using no more than 300 words. Avoid copying text verbatim from the README. Focus on the purpose, how it works, and why someone might use it.\n\nREADME:\n${trimmedReadme}`,
+            text: `You are an expert software engineer. Read the following GitHub README and generate an explanation in markdown format with these sections (use '##' markdown heading for each):
+
+                    ## TL;DR
+                    ## What this project does
+                    ## Key features
+                    ## Intended use case
+
+                    Make it beginner-friendly, avoid copying the README directly. Keep it under 300 words.
+
+                    README:
+                    ${trimmedReadme}`
+                    ,
           },
           ],
         },
