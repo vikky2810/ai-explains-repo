@@ -84,21 +84,7 @@ export default function Home() {
           ❗ {error}
         </div>
       )}
-
-
-      {metadata && !loading && (
-        <div className="max-w-xl mx-auto mt-12 mb-4 p-4 rounded-lg bg-slate-800 flex flex-col gap-2">
-          <a href={metadata.url} target={"_blank"} rel="noopener noreferrer" className="text-lg font-bold text-indigo-400 hover:underline">
-            {metadata.name}
-          </a>
-          <p className="text-slate-300">{metadata.description}</p>
-          <div className="flex gap-6 mt-2">
-            <span>⭐ {metadata.stars}</span>
-            <span>🍴 {metadata.forks}</span>
-          </div>
-        </div>
-      )}
-      
+     
 
       {(explanation || metadata) && !loading && (
         <div className="max-w-xl mx-auto mt-12">
@@ -116,6 +102,9 @@ export default function Home() {
                 <div className="flex gap-6 mt-2">
                   <span>⭐ {metadata.stars}</span>
                   <span>🍴 {metadata.forks}</span>
+                  {metadata.lastCommitDate && (
+                    <span>🕒 Last commit: {new Date(metadata.lastCommitDate).toLocaleDateString()}</span>
+                  )}
                 </div>
               </div>
             )}

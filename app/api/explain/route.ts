@@ -2,6 +2,16 @@ import { log } from "console";
 import { url } from "inspector";
 import { NextRequest, NextResponse } from "next/server";
 
+async function getLastCommitDate(owner:string, repo:string)
+{
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`);
+    if(!res.ok) throw new Error('Commit not found');
+    const commits = await res.json();
+
+    return commits[0]?.commit?.committer?.date;
+}
+
+
 export async function POST(req: NextRequest) {
   try {
     const { repoUrl } = await req.json();
@@ -22,6 +32,8 @@ export async function POST(req: NextRequest) {
     }
 
     const [, owner, repo] = match;
+
+    const lastCommitDate = await getLastCommitDate(owner, repo);
 
     const readmeRes = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/readme`,
@@ -45,7 +57,8 @@ export async function POST(req: NextRequest) {
       name: repoData.full_name,
       stars : repoData.stargazers_count,
       forks: repoData.forks_count,
-      url: repoData.html_url
+      url: repoData.html_url,
+      lastCommitDate,
     }
 
     if (!readmeRes.ok) {
