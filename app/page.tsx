@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, RefObject } from "react";
 import ReactMarkdown from "react-markdown";
 
 export default function Home() {
@@ -9,6 +9,7 @@ export default function Home() {
   const [explanation, setExplanation] = useState("");
   const [metadata, setMetadata] = useState<any>(null);
   const [error, setError] = useState("");
+  const explanationRef = useRef<HTMLDivElement>(null);
 
   const handleExplain = async () => {
     if (!repoUrl) return;
@@ -33,6 +34,11 @@ export default function Home() {
       if (data.explanation) {
         setExplanation(data.explanation);
         setMetadata(data.metadata);
+
+        // Smooth scroll after data loads
+        setTimeout(() => {
+          smoothScrollToRef(explanationRef);
+        }, 200);
       } else {
         setExplanation("Could not generate explanation.");
         setMetadata(null);
@@ -80,23 +86,20 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Loading Spinner */}
       {loading && (
         <div className="flex justify-center mt-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-400"></div>
         </div>
       )}
 
-      {/* Error Message */}
       {error && (
         <div className="max-w-xl mx-auto mt-8 bg-red-600 text-white p-4 rounded-lg shadow">
           ❗ {error}
         </div>
       )}
 
-      {/* Metadata + Explanation */}
       {(explanation || metadata) && !loading && (
-        <div className="max-w-xl mx-auto mt-12">
+        <div className="max-w-xl mx-auto mt-12" ref={explanationRef}>
           {metadata && (
             <div className="p-4 rounded-t-lg bg-slate-800 flex flex-col">
               <a
@@ -123,7 +126,6 @@ export default function Home() {
 
           {explanation && <Section title="🧠 Summary" markdown={explanation} />}
 
-          {/* Reset button */}
           <div className="text-center mt-4">
             <button
               onClick={handleReset}
@@ -142,6 +144,7 @@ interface SectionProps {
   title: string;
   markdown: string;
 }
+
 export function Section({ title, markdown }: SectionProps) {
   const sections = splitMarkdownSections(markdown);
 
@@ -157,7 +160,7 @@ export function Section({ title, markdown }: SectionProps) {
           }`}
         >
           <ReactMarkdown
-  components={{
+            components={{
               h2: ({ children }) => (
                 <h2 className="text-2xl font-bold mb-3">{children}</h2>
               ),
@@ -165,14 +168,12 @@ export function Section({ title, markdown }: SectionProps) {
           >
             {`## ${boldHeading(sec.heading)}\n${sec.content}`}
           </ReactMarkdown>
-
         </div>
       ))}
     </div>
   );
 }
 
-// Split markdown into sections based on ## Heading
 function splitMarkdownSections(markdown: string) {
   const regex = /^##\s+(.*)$/gm;
   const matches = [...markdown.matchAll(regex)];
@@ -188,8 +189,6 @@ function splitMarkdownSections(markdown: string) {
   return sections;
 }
 
-
-// Background color by heading type
 function sectionColorClass(heading: string): string {
   const h = heading.toLowerCase();
   if (h.includes("tl;dr")) return "bg-yellow-900/30";
@@ -198,7 +197,6 @@ function sectionColorClass(heading: string): string {
   if (h.includes("intended use")) return "bg-pink-900/30";
   return "bg-slate-700/40";
 }
-
 
 function boldHeading(heading: string): string {
   const match = heading.toLowerCase();
@@ -210,4 +208,11 @@ function boldHeading(heading: string): string {
     return `**${heading}**`;
   }
   return heading;
+}
+
+// ✅ Fixed scroll function
+function smoothScrollToRef(ref: RefObject<HTMLElement | null>) {
+  if (ref.current) {
+    ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
