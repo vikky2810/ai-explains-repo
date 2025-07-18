@@ -47,6 +47,7 @@ export default function Home() {
       console.error(error);
       setExplanation("Something went wrong.");
       setMetadata(null);
+      setError("Failed to fetch explanation. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -146,6 +147,7 @@ interface SectionProps {
 }
 
 export function Section({ title, markdown }: SectionProps) {
+  if (!markdown) return null;
   const sections = splitMarkdownSections(markdown);
 
   return (

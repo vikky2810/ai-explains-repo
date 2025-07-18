@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
+async function getLastCommitDate(owner:string, repo:string)
+{
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`);
+    if(!res.ok) throw new Error('Commit not found');
+    const commits = await res.json();
+
+    return commits[0]?.commit?.committer?.date;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { repoUrl } = await req.json();
@@ -20,6 +29,10 @@ export async function POST(req: NextRequest) {
     }
 
     const [, owner, repo] = match;
+
+    const lastCommitDate = await getLastCommitDate(owner, repo);
+
+    
 
     // Fetch all files in the repository
     try {
@@ -46,10 +59,35 @@ export async function POST(req: NextRequest) {
             concatenatedContents += fileContents;
           } catch (error) {
             console.error(`Error fetching file ${file.name}:`, error);
+            return NextResponse.json(
+              { error: `Error fetching file ${file.name}: ${error}` },
+              { status: 500 }
+            );
           }
         }
       }
 
+      // Fetch repo metadata
+      const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`)
+        if (!filesRes.ok) {
+          return NextResponse.json({ error: "Repository not found or it's private." }, { status: 404 });
+        }
+
+      if (!repoRes.ok) {
+        return NextResponse.json({ error: "Repository not found or it's private." }, { status: 404 });
+      }
+      const repoData = await repoRes.json();
+      
+      const metadata = {
+        name: repoData.full_name,
+        description: repoData.description,
+        stars : repoData.stargazers_count,
+        forks: repoData.forks_count,
+        url: repoData.html_url,
+        lastCommitDate,
+      }
+
+     
       // Trim concatenated contents to 5000 characters
       const trimmedContents = concatenatedContents.slice(0, 5000);
 
@@ -93,7 +131,7 @@ export async function POST(req: NextRequest) {
           data?.candidates?.[0]?.content?.parts?.[0]?.text ||
           "Explanation not available.";
 
-        return NextResponse.json({ explanation: result });
+        return NextResponse.json({ explanation: result,metadata});
       } catch (error) {
         console.error("Server error:", error);
         return NextResponse.json({ error: "Server error" }, { status: 500 });
