@@ -3,11 +3,20 @@
 import React, { useState, useRef, RefObject } from "react";
 import ReactMarkdown from "react-markdown";
 
+interface RepoMetadata {
+  url: string;
+  name: string;
+  description: string;
+  stars: number;
+  forks: number;
+  lastCommitDate?: string;
+}
+
 export default function Home() {
   const [repoUrl, setRepoUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [explanation, setExplanation] = useState("");
-  const [metadata, setMetadata] = useState<any>(null);
+  const [metadata, setMetadata] = useState<RepoMetadata | null>(null);
   const [error, setError] = useState("");
   const explanationRef = useRef<HTMLDivElement>(null);
 
