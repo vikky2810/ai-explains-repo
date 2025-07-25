@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useAuth,
+} from '@clerk/nextjs';
+
+import {useRouter} from 'next/navigation';
 
 interface HomeProps {
   onTryNow: () => void;
 }
 
 const Home: React.FC<HomeProps> = ({ onTryNow }) => {
+  const  {isSignedIn} = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSignedIn){
+      router.push('/chat');
+    }
+  },[isSignedIn, router]);
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-800 flex items-center justify-center px-4">
       <section className="w-full max-w-4xl mx-auto py-12 md:py-20 px-6 text-center bg-slate-900/80 rounded-2xl shadow-xl border border-slate-800">
@@ -26,12 +47,20 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
           >
             Try it now 🚀
           </button>
+          <ClerkProvider>
+          <SignedOut>
+            <SignInButton mode='modal'>
           <button
-            className="bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold px-8 py-3 rounded-lg shadow-lg transition-all duration-150 opacity-60 cursor-not-allowed"
-            disabled
+            className="bg-slate-800 hover:bg-slate-700 text-indigo-300 font-semibold px-8 py-3 rounded-lg shadow-lg transition-all duration-150 opacity-60"
           >
-            Login / Signup (coming soon)
+            Login / Signup
           </button>
+          </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          </ClerkProvider>
         </div>
       </section>
     </div>
