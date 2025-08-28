@@ -1,12 +1,14 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 
-import Home  from './components/chat'
+import Chat  from './components/chat'
+import Home from './components/home'
 
 export default function Hero() {
+  const [showChat, setShowChat] = useState(false);
   return (
-    <div >
-      <Home />
-    </div>
+    <>
+      {showChat ? <Chat /> : <Home onTryNow={() => setShowChat(true)} />}
+    </>
   );
 }

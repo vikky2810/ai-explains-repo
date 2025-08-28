@@ -2,11 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 
 async function getLastCommitDate(owner:string, repo:string)
 {
-    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`);
-    if(!res.ok) throw new Error('Commit not found');
-    const commits = await res.json();
-
-    return commits[0]?.commit?.committer?.date;
+    try {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`, {
+            headers: {
+                Accept: "application/vnd.github.v3+json",
+                "User-Agent": "ai-explains-this-repo",
+            },
+        });
+        if(!res.ok) {
+            // Empty or private repos, or API limits; don't fail the whole request
+            return undefined;
+        }
+        const commits = await res.json();
+        return commits[0]?.commit?.committer?.date;
+    } catch {
+        return undefined;
+    }
 }
 
 export async function POST(req: NextRequest) {
@@ -69,10 +80,6 @@ export async function POST(req: NextRequest) {
 
       // Fetch repo metadata
       const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`)
-        if (!filesRes.ok) {
-          return NextResponse.json({ error: "Repository not found or it's private." }, { status: 404 });
-        }
-
       if (!repoRes.ok) {
         return NextResponse.json({ error: "Repository not found or it's private." }, { status: 404 });
       }
