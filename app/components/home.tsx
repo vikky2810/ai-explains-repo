@@ -92,7 +92,7 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
           <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-5 text-left transition hover:translate-y-[-2px] hover:border-slate-700/60">
             <div className="text-2xl">🔒</div>
             <h3 className="mt-2 font-semibold text-slate-200">Optional login</h3>
-            <p className="mt-1 text-sm text-slate-400">Sign in with Clerk to save and revisit your summaries.</p>
+            <p className="mt-1 text-sm text-slate-400">Sign in to save and revisit your summaries.</p>
           </div>
         </div>
 

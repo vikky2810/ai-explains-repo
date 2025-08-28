@@ -70,13 +70,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white px-6 py-12">
-      <h1 className="text-3xl font-bold text-center mb-2">AI Explains This Repo</h1>
-      <p className="text-center text-slate-400 mb-8">
+    <div className="min-h-screen bg-slate-900 text-white px-4 sm:px-6 py-10 sm:py-12">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2">AI Explains This Repo</h1>
+      <p className="text-center text-slate-400 mb-8 text-sm sm:text-base">
         Paste any GitHub repo URL and get a human-friendly explanation
       </p>
 
-      <div className="max-w-xl mx-auto flex flex-col gap-4">
+      <div className="max-w-xl mx-auto flex flex-col gap-3 sm:gap-4">
         <input
           type="text"
           value={repoUrl}
@@ -85,11 +85,11 @@ export default function Home() {
             if (e.key === "Enter") handleExplain();
           }}
           placeholder="https://github.com/user/repo"
-          className="p-4 rounded-lg bg-slate-800 text-white outline-none"
+          className="w-full p-3 sm:p-4 rounded-lg bg-slate-800 text-white outline-none text-sm sm:text-base"
         />
         <button
           onClick={handleExplain}
-          className="p-4 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold disabled:opacity-50"
+          className="w-full p-3 sm:p-4 bg-indigo-500 hover:bg-indigo-600 rounded-lg font-semibold disabled:opacity-50 text-sm sm:text-base"
           disabled={loading}
         >
           {loading ? "Explaining..." : "Explain Repo 🚀"}
@@ -103,27 +103,27 @@ export default function Home() {
       )}
 
       {error && (
-        <div className="max-w-xl mx-auto mt-8 bg-red-600 text-white p-4 rounded-lg shadow">
+        <div className="max-w-xl mx-auto mt-8 bg-red-600 text-white p-3 sm:p-4 rounded-lg shadow text-sm sm:text-base">
           ❗ {error}
         </div>
       )}
 
       {(explanation || metadata) && !loading && (
-        <div className="max-w-xl mx-auto mt-12" ref={explanationRef}>
+        <div className="max-w-xl mx-auto mt-10 sm:mt-12" ref={explanationRef}>
           {metadata && (
-            <div className="p-4 rounded-t-lg bg-slate-800 flex flex-col">
+            <div className="p-4 rounded-t-lg bg-slate-800 flex flex-col gap-1">
               <a
                 href={metadata.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-lg font-bold text-indigo-400 hover:underline"
+                className="text-base sm:text-lg font-bold text-indigo-400 hover:underline break-words"
               >
                 {metadata.name}
               </a>
-              <p className="text-slate-300">{metadata.description}</p>
-              <div className="flex gap-6 mt-2">
-                <span>⭐ {metadata.stars}</span>
-                <span>🍴 {metadata.forks}</span>
+              <p className="text-slate-300 text-sm sm:text-base">{metadata.description}</p>
+              <div className="flex flex-wrap items-center gap-3 sm:gap-6 mt-2 text-sm sm:text-base">
+                <span className="shrink-0">⭐ {metadata.stars}</span>
+                <span className="shrink-0">🍴 {metadata.forks}</span>
                 {metadata.lastCommitDate && (
                   <span>
                     🕒 Last commit:{" "}
