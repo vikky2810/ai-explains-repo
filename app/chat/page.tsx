@@ -167,7 +167,7 @@ interface SectionProps {
   markdown: string;
 }
 
-export function Section({ title, markdown }: SectionProps) {
+function Section({ title, markdown }: SectionProps) {
   if (!markdown) return null;
   const sections = splitMarkdownSections(markdown);
 
