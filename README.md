@@ -1,80 +1,88 @@
 # 🧠 AI Explains This Repo
 
-Hey! 👋  
-This is a Next.js app that explains any GitHub repo for you, in plain English.  
-Just paste a GitHub repo link, hit the button, and boom — you get a summary that even your grandma could understand.
+Explain any public GitHub repository in plain English. Paste a repo URL, and get a clean, beginner‑friendly summary with key features and intended use.
 
-## 🚀 How It Works
+![Screenshot](preview.png)
 
-- **Frontend:**  
-  Built with Next.js (using the App Router), Tailwind CSS for styling, and React for all the UI stuff.
-- **Backend:**  
-  There's a simple API route that grabs the README from the GitHub repo you give it.
-- **AI Magic:**  
-  The backend sends the README to Google's Gemini AI model, which spits out a short, easy-to-read explanation.
+## ✨ Features
+- **Instant repo summaries**: Paste a GitHub URL → get a concise explanation.
+- **Smart sections**: TL;DR, What it does, Key features, Use cases (rendered as markdown).
+- **Repo metadata**: Stars, forks, last commit date, and link.
+- **Authentication (Clerk)**: Optional sign in/up (modal) and `UserButton` in the header.
+- **Polished UI**: Next.js App Router + Tailwind CSS, responsive hero page and chat page.
 
+## 🧩 How it works
+1. Client sends the repo URL to `POST /api/explain`.
+2. API fetches repo contents from GitHub (root files), builds a trimmed context, and fetches repo metadata.
+3. Sends context to Google Gemini to produce a markdown summary with specific sections.
+4. UI renders markdown nicely, grouped by section, with repo metadata on top.
 
-# Project Structure 
+> Note: Currently only root-level files are fetched. Large/binary files are not filtered yet. See Roadmap.
 
+## 🗂️ Project structure
 ```
-ai-explains-repo/
-├── app/
-│   ├── api/
-│   │   └── explain/
-│   │       └── route.ts      # API route for explaining repos
-│   └── page.tsx              # Main frontend page
-├── .env                      # Gemini API key (not committed)
-├── package.json
-├── pnpm-lock.yaml
-├── tailwind.config.js
-├── tsconfig.json
-├── README.md
-
+app/
+  api/explain/route.ts   # API route → GitHub fetch + Gemini summary
+  components/
+    home.tsx             # Hero page with CTA and Clerk auth buttons
+    chat.tsx             # Chat-style page to enter URL and view summary
+  chat/page.tsx          # Signed-in experience using same summary UI
+  layout.tsx             # Root layout with Clerk provider
+  page.tsx               # Entry → toggles Home/Chat
+public/                  # SVG assets
 ```
 
-## 🛠️ How To Use
+## 🔐 Environment variables
+Create `.env.local` in the project root:
+```
+# Google Gemini
+GEMINI_API_KEY=your_gemini_api_key
 
-1. Clone this repo:
-   ```sh
-   git clone https://github.com/vikky2810/ai-explains-repo.git
-   cd ai-explains-this-repo
-   ```
-2. Install dependencies:
-   ```sh
-   pnpm install
-   ```
-3. Get a [Gemini API key](https://ai.google.dev/) and add it to your `.env` file:
-   ```
-   GEMINI_API_KEY=your-api-key-here
-   ```
-4. Run the app:
-   ```sh
-   pnpm run dev
-   ```
-5. Open [http://localhost:3000](http://localhost:3000) and paste any GitHub repo URL.  
-   Wait a sec, and you'll get a summary!
+# Clerk (Auth)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
 
-## 💡 Why?
+# Optional: GitHub token for higher rate limits / private repos
+# GITHUB_TOKEN=ghp_...
+```
 
-Honestly, reading through random repos can be a pain, especially if the README is super long or confusing.  
-This app just makes it easier to get the gist without wasting time.
+## 🚀 Getting started
+```bash
+pnpm install
+pnpm dev
+# visit http://localhost:3000
+```
 
-## 🤖 Tech Stack
+### Usage
+1. Open the site and paste a GitHub repo URL, e.g. `https://github.com/vercel/next.js`.
+2. Click “Explain Repo 🚀”.
+3. Read the generated summary. Click the repo title to open it on GitHub.
+4. Click “Explain another repo” to reset.
 
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Google Gemini API](https://ai.google.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
+## 🧱 Tech stack
+- Next.js 15 (App Router), React 19, TypeScript
+- Tailwind CSS
+- Clerk (authentication)
+- Google Gemini API
+- react-markdown
 
-## 🙋‍♂️ Who Made This?
+## ⚠️ Limitations (current behavior)
+- Only root-level files are fetched from GitHub (no recursive traversal yet).
+- No streaming; summaries appear after the full response.
+- No caching or rate limiting yet.
+- Markdown rendering is sanitized (no raw HTML) but links open in a new tab.
 
-Made by an engineering student who got tired of reading boring READMEs.  
-Feel free to fork, star, or open issues if you wanna help out or have ideas!
+## 🗺️ Roadmap
+- Recursive GitHub traversal with size caps and binary filtering.
+- Map–reduce summarization for faster/cheaper responses.
+- Streaming responses to the UI.
+- Caching and simple rate limiting.
+- Optional history for signed-in users.
 
-## 📸 Screenshot
-
-![Screenshot](preview.png) <!-- Add your screenshot here if you want -->
+## 🧪 Development notes
+- The API handles missing commits and private/empty repos gracefully (omits last commit date).
+- Ensure Clerk keys and Gemini key are set; restart dev server after changes.
 
 ---
 
-*Built for fun and learning. Hope it
+Built for clarity and speed. PRs and suggestions welcome!
