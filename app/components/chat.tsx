@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useState, useRef, RefObject } from "react";
+import React, { useState, useRef } from "react";
 import ReactMarkdown from "react-markdown";
-
-interface RepoMetadata {
-  url: string;
-  name: string;
-  description: string;
-  stars: number;
-  forks: number;
-  lastCommitDate?: string;
-}
+import { 
+  splitMarkdownSections, 
+  sectionColorClass, 
+  boldHeading,
+  smoothScrollToRef 
+} from "@/lib/utils";
+import { RepoMetadata, SectionProps } from "@/types";
 
 export default function Home() {
   const [repoUrl, setRepoUrl] = useState("");
@@ -150,11 +148,6 @@ export default function Home() {
   );
 }
 
-interface SectionProps {
-  title: string;
-  markdown: string;
-}
-
 export function Section({ title, markdown }: SectionProps) {
   if (!markdown) return null;
   const sections = splitMarkdownSections(markdown);
@@ -173,7 +166,7 @@ export function Section({ title, markdown }: SectionProps) {
           <ReactMarkdown
             components={{
               h2: ({ children }) => (
-                <h2 className="text-2xl font-bold mb-3">{children}</h2>
+                <h2 className="text-xl font-bold mb-3">{children}</h2>
               ),
             }}
           >
@@ -183,47 +176,4 @@ export function Section({ title, markdown }: SectionProps) {
       ))}
     </div>
   );
-}
-
-function splitMarkdownSections(markdown: string) {
-  const regex = /^##\s+(.*)$/gm;
-  const matches = [...markdown.matchAll(regex)];
-
-  const sections = matches.map((match, index) => {
-    const start = match.index!;
-    const end = matches[index + 1]?.index ?? markdown.length;
-    const heading = match[1].trim();
-    const content = markdown.slice(start, end).replace(match[0], "").trim();
-    return { heading, content };
-  });
-
-  return sections;
-}
-
-function sectionColorClass(heading: string): string {
-  const h = heading.toLowerCase();
-  if (h.includes("tl;dr")) return "bg-yellow-900/30";
-  if (h.includes("what this project")) return "bg-blue-900/30";
-  if (h.includes("key feature")) return "bg-green-900/30";
-  if (h.includes("intended use")) return "bg-pink-900/30";
-  return "bg-slate-700/40";
-}
-
-function boldHeading(heading: string): string {
-  const match = heading.toLowerCase();
-  if (
-    match.includes("tl;dr") ||
-    match.includes("what this project") ||
-    match.includes("key feature")
-  ) {
-    return `**${heading}**`;
-  }
-  return heading;
-}
-
-// ✅ Fixed scroll function
-function smoothScrollToRef(ref: RefObject<HTMLElement | null>) {
-  if (ref.current) {
-    ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
 }

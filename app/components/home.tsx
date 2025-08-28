@@ -2,23 +2,18 @@ import React, { useEffect } from 'react';
 import Image from 'next/image';
 import previewPng from '../../preview.png';
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, useAuth } from '@clerk/nextjs';
-
-import {useRouter} from 'next/navigation';
-
-interface HomeProps {
-  onTryNow: () => void;
-}
+import { useRouter } from 'next/navigation';
+import { HomeProps } from '@/types';
 
 const Home: React.FC<HomeProps> = ({ onTryNow }) => {
-  const  {isSignedIn} = useAuth();
+  const { isSignedIn } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (isSignedIn){
+    if (isSignedIn) {
       router.push('/chat');
     }
-  },[isSignedIn, router]);
-
+  }, [isSignedIn, router]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950">
