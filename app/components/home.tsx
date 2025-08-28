@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
+import previewPng from '../../preview.png';
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, useAuth } from '@clerk/nextjs';
 
 import {useRouter} from 'next/navigation';
@@ -108,7 +109,7 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
           </div>
           <div className="relative">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(99,102,241,0.08),transparent_60%)]" />
-            <Image src={require('../../preview.png')} alt="Preview" className="relative mx-auto w-full max-w-4xl opacity-90" />
+            <Image src={previewPng} alt="Preview" className="relative mx-auto w-full max-w-4xl opacity-90" />
           </div>
         </div>
 
@@ -116,17 +117,17 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
           <h2 className="text-left text-xl font-bold text-slate-200 sm:text-2xl">How it works</h2>
           <div className="mt-6 grid grid-cols-1 gap-4 text-left sm:grid-cols-3">
             <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
-              <img src="/globe.svg" alt="Step 1" className="h-6 w-6 opacity-80" />
+              <Image src="/globe.svg" alt="Step 1" width={24} height={24} className="h-6 w-6 opacity-80" />
               <h3 className="mt-3 font-semibold text-slate-200">1. Paste a GitHub URL</h3>
               <p className="mt-1 text-sm text-slate-400">Point to any public repository to start the analysis.</p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
-              <img src="/file.svg" alt="Step 2" className="h-6 w-6 opacity-80" />
+              <Image src="/file.svg" alt="Step 2" width={24} height={24} className="h-6 w-6 opacity-80" />
               <h3 className="mt-3 font-semibold text-slate-200">2. We read the code</h3>
               <p className="mt-1 text-sm text-slate-400">We scan key files and infer architecture, libraries, and purpose.</p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
-              <img src="/next.svg" alt="Step 3" className="h-6 w-6 opacity-80" />
+              <Image src="/next.svg" alt="Step 3" width={24} height={24} className="h-6 w-6 opacity-80" />
               <h3 className="mt-3 font-semibold text-slate-200">3. Get a summary</h3>
               <p className="mt-1 text-sm text-slate-400">Receive a clear, concise brief with next steps and examples.</p>
             </div>
