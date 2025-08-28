@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, RefObject } from "react";
 import ReactMarkdown from "react-markdown";
-import { ClerkProvider , UserButton, useAuth,} from "@clerk/nextjs"; '@clerk/nextjs'
+import { UserButton } from "@clerk/nextjs";
 interface RepoMetadata {
   url: string;
   name: string;
