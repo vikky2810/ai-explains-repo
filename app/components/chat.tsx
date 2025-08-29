@@ -25,13 +25,20 @@ export default function Home() {
     setExplanation("");
 
     try {
+      // Add timeout to prevent infinite loading
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const res = await fetch("/api/explain", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ repoUrl }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       const data = await res.json();
       if (!res.ok) {
@@ -52,9 +59,13 @@ export default function Home() {
       }
     } catch (error) {
       console.error(error);
-      setExplanation("Something went wrong.");
-      setMetadata(null);
-      setError("Failed to fetch explanation. Please try again later.");
+      if (error instanceof Error && error.name === 'AbortError') {
+        setError("Request timed out. Please try again.");
+      } else {
+        setExplanation("Something went wrong.");
+        setMetadata(null);
+        setError("Failed to fetch explanation. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -130,7 +141,7 @@ export default function Home() {
               <div className="w-20 h-20 border-4 border-slate-700 rounded-full"></div>
               <div className="absolute top-0 left-0 w-20 h-20 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
-            <p className="text-slate-200 text-lg font-medium">Fetching repository data...</p>
+            <p className="text-slate-200 text-lg font-medium">Analyzing repository...</p>
           </div>
         </div>
       )}
@@ -188,7 +199,7 @@ export default function Home() {
                     {metadata.lastCommitDate && (
                       <div className="flex items-center gap-2 bg-slate-700/50 px-3 py-2 rounded-lg">
                         <span className="text-green-400">🕒</span>
-                        <span className="text-slate-200 text-sm">
+                        <span className="text-sm">
                           Last commit: {new Date(metadata.lastCommitDate).toLocaleDateString()}
                         </span>
                       </div>

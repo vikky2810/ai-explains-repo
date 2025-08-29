@@ -2,7 +2,7 @@
  * GitHub API service for repository operations
  */
 
-import { GitHubRepoInfo, RepoMetadata, RepoFile } from "@/types";
+import { RepoMetadata, RepoFile } from "@/types";
 
 export class GitHubService {
   private static readonly USER_AGENT = "ai-explains-this-repo";

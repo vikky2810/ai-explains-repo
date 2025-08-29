@@ -3,6 +3,7 @@
  */
 
 import { RefObject } from 'react';
+import { RepoMetadata } from './api';
 
 // Chat component types
 export interface ChatState {
@@ -28,6 +29,3 @@ export interface MarkdownSection {
 export interface ScrollRef {
   ref: RefObject<HTMLElement | null>;
 }
-
-// Import types from API types
-import { RepoMetadata } from './api';

@@ -32,7 +32,10 @@ export async function POST(req: NextRequest) {
         maxWords: 300
       });
 
-      const response: ExplainRepoResponse = { explanation, metadata };
+      const response: ExplainRepoResponse = { 
+        explanation, 
+        metadata 
+      };
       return NextResponse.json(response);
     } catch (error) {
       console.error("Service error:", error);
