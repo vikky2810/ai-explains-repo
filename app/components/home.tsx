@@ -11,9 +11,9 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
 
   useEffect(() => {
     if (isSignedIn) {
-      router.push('/chat');
+      onTryNow();
     }
-  }, [isSignedIn, router]);
+  }, [isSignedIn, onTryNow]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950">
