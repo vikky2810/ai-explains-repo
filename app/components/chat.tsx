@@ -80,7 +80,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-slate-950">
       {/* Header with Profile Icon */}
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
         <div className="flex items-center gap-3">
@@ -90,6 +90,13 @@ export default function Home() {
           <span className="text-lg font-semibold text-slate-200">AI Explains This Repo</span>
         </div>
         <div className="flex items-center gap-3">
+          <button 
+            onClick={() => window.history.back()}
+            className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-200 flex items-center gap-2"
+          >
+            <span>←</span>
+            <span>Back</span>
+          </button>
           <UserButton />
         </div>
       </header>
@@ -97,7 +104,7 @@ export default function Home() {
       <div className="px-4 sm:px-6 py-10 sm:py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full mb-6 shadow-2xl">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-500 to-fuchsia-600 rounded-full mb-6 shadow-2xl">
             <span className="text-2xl">🧠</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-3">
@@ -111,8 +118,8 @@ export default function Home() {
         {/* Input Section */}
         <div className="max-w-2xl mx-auto mb-12">
           <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
-            <div className="relative bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-2xl">
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-fuchsia-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+            <div className="relative bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
               <div className="flex flex-col gap-4">
                 <div className="relative">
                   <input
@@ -120,18 +127,16 @@ export default function Home() {
                     value={repoUrl}
                     onChange={(e) => setRepoUrl(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") handleExplain();
+                      if (e.key === "Enter" && !loading) handleExplain();
+                      if (e.key === "Escape") setRepoUrl("");
                     }}
                     placeholder="https://github.com/user/repo"
-                    className="w-full p-4 pl-12 rounded-xl bg-slate-700/50 text-white placeholder-slate-400 outline-none text-base border border-slate-600/50 focus:border-indigo-400/50 focus:ring-2 focus:ring-indigo-400/20 transition-all duration-200"
+                    className="w-full p-4 pl-12 rounded-xl bg-slate-800/50 text-white placeholder-slate-400 outline-none text-base border border-slate-700/60 focus:border-indigo-400/50 focus:ring-2 focus:ring-indigo-400/20 transition-all duration-200"
                   />
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
-                    🔗
-                  </div>
                 </div>
                 <button
                   onClick={handleExplain}
-                  className="w-full p-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-base"
+                  className="w-full p-4 bg-gradient-to-r from-indigo-500 to-fuchsia-600 hover:from-indigo-600 hover:to-fuchsia-700 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-base"
                   disabled={loading}
                 >
                   {loading ? (
@@ -148,15 +153,18 @@ export default function Home() {
           </div>
         </div>
 
+        
+
         {/* Loading State */}
         {loading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm z-50">
+          <div className="fixed inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm z-50">
             <div className="text-center flex flex-col items-center">
-              <div className="relative mx-auto mb-4">
-                <div className="w-20 h-20 border-4 border-slate-700 rounded-full"></div>
-                <div className="absolute top-0 left-0 w-20 h-20 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="relative mx-auto mb-6">
+                <div className="w-24 h-24 border-4 border-slate-800 rounded-full"></div>
+                <div className="absolute top-0 left-0 w-24 h-24 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
               </div>
-              <p className="text-slate-200 text-lg font-medium">Analyzing repository...</p>
+              <p className="text-slate-200 text-xl font-medium mb-2">Analyzing repository...</p>
+              <p className="text-slate-400 text-sm">This may take a few moments</p>
             </div>
           </div>
         )}
@@ -164,10 +172,19 @@ export default function Home() {
         {/* Error State */}
         {error && (
           <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-red-500/20 border border-red-500/30 text-red-200 p-4 rounded-xl backdrop-blur-sm">
-              <div className="flex items-center gap-3">
-                <span className="text-xl">⚠️</span>
-                <span className="text-base">{error}</span>
+            <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-6 rounded-xl backdrop-blur-sm">
+              <div className="flex items-start gap-4">
+                <span className="text-2xl mt-1">⚠️</span>
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-2">Something went wrong</h3>
+                  <p className="text-base mb-3">{error}</p>
+                  <button 
+                    onClick={() => setError("")}
+                    className="text-red-300 hover:text-red-200 underline text-sm"
+                  >
+                    Dismiss
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -179,7 +196,7 @@ export default function Home() {
             {/* Repository Metadata Card */}
             {metadata && (
               <div className="mb-8">
-                <div className="bg-gradient-to-r from-slate-800/90 to-slate-700/90 backdrop-blur-sm border border-slate-600/50 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
                   <div className="flex flex-col gap-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -202,17 +219,17 @@ export default function Home() {
                       </div>
                     </div>
                     
-                    <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-600/50">
-                      <div className="flex items-center gap-2 bg-slate-700/50 px-3 py-2 rounded-lg">
+                    <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-800/80">
+                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg">
                         <span className="text-yellow-400">⭐</span>
                         <span className="text-slate-200 font-medium">{metadata.stars.toLocaleString()}</span>
                       </div>
-                      <div className="flex items-center gap-2 bg-slate-700/50 px-3 py-2 rounded-lg">
+                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg">
                         <span className="text-blue-400">🍴</span>
                         <span className="text-slate-200 font-medium">{metadata.forks.toLocaleString()}</span>
                       </div>
                       {metadata.lastCommitDate && (
-                        <div className="flex items-center gap-2 bg-slate-700/50 px-3 py-2 rounded-lg">
+                        <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg">
                           <span className="text-green-400">🕒</span>
                           <span className="text-sm">
                             Last commit: {new Date(metadata.lastCommitDate).toLocaleDateString()}
@@ -250,7 +267,7 @@ export function Section({ title, markdown }: SectionProps) {
   const sections = splitMarkdownSections(markdown);
 
   return (
-    <div className="bg-gradient-to-r from-slate-800/90 to-slate-700/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-600/50">
+    <div className="bg-slate-900/60 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-800/80">
       <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 flex items-center gap-3">
         <span className="text-3xl">{title.split(' ')[0]}</span>
         <span className="bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent">
@@ -262,7 +279,7 @@ export function Section({ title, markdown }: SectionProps) {
         {sections.map((sec, i) => (
           <div
             key={i}
-            className={`rounded-xl p-6 backdrop-blur-sm border border-slate-600/30 transition-all duration-200 hover:border-slate-500/50 ${
+            className={`rounded-xl p-6 backdrop-blur-sm border border-slate-800/60 transition-all duration-200 hover:border-slate-700/80 ${
               sectionColorClass(sec.heading)
             }`}
           >
