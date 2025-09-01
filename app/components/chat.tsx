@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { UserButton } from "@clerk/nextjs";
 import { 
@@ -10,17 +10,138 @@ import {
   smoothScrollToRef 
 } from "@/lib/utils";
 import { RepoMetadata, SectionProps } from "@/types";
+import SearchHistory from "./SearchHistory";
 
 export default function Home() {
-  const [repoUrl, setRepoUrl] = useState("");
+  const [repoUrl, setRepoUrl] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [explanation, setExplanation] = useState("");
   const [metadata, setMetadata] = useState<RepoMetadata | null>(null);
   const [error, setError] = useState("");
   const explanationRef = useRef<HTMLDivElement>(null);
+  const repoUrlRef = useRef<string>("");
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    repoUrlRef.current = repoUrl;
+    console.log('🔄 repoUrl state changed to:', repoUrl); // Debug log
+  }, [repoUrl]);
+
+  // Debug effect for explanation and metadata
+  useEffect(() => {
+    console.log('🔄 explanation state changed to:', explanation ? `${explanation.substring(0, 50)}...` : 'empty'); // Debug log
+  }, [explanation]);
+
+  useEffect(() => {
+    console.log('🔄 metadata state changed to:', metadata ? metadata.name : 'null'); // Debug log
+  }, [metadata]);
+
+  useEffect(() => {
+    console.log('🔄 loading state changed to:', loading); // Debug log
+  }, [loading]);
+
+  const handleLoadFromHistory = (repoUrl: string) => {
+    console.log('=== LOADING FROM HISTORY START ==='); // Debug log
+    console.log('Loading from history:', repoUrl); // Debug log
+    
+    // Clear previous results first
+    setExplanation("");
+    setMetadata(null);
+    setError("");
+    
+    // Update state immediately
+    setRepoUrl(repoUrl);
+    console.log('State updated, repoUrl is now:', repoUrl); // Debug log
+    
+    // Trigger search immediately with the URL parameter
+    console.log('=== TRIGGERING SEARCH ==='); // Debug log
+    console.log('Calling handleExplainWithUrl with:', repoUrl); // Debug log
+    handleExplainWithUrl(repoUrl);
+  };
+
+  const handleExplainWithUrl = async (url: string) => {
+    console.log('=== HANDLE EXPLAIN WITH URL START ==='); // Debug log
+    console.log('handleExplainWithUrl called with:', url); // Debug log
+    if (!url || typeof url !== 'string') {
+      console.log('❌ Invalid URL, returning'); // Debug log
+      return;
+    }
+    
+    console.log('✅ Starting API call for URL:', url); // Debug log
+    setError("");
+    setLoading(true);
+    setExplanation("");
+
+    try {
+      // Add timeout to prevent infinite loading
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+      console.log('🌐 Making fetch request to /api/explain with:', { repoUrl: url }); // Debug log
+      const res = await fetch("/api/explain", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ repoUrl: url }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      console.log('📡 Response received:', res.status, res.ok); // Debug log
+      const data = await res.json();
+      console.log('📄 Response data received:', data); // Debug log
+      console.log('📄 Response data type:', typeof data); // Debug log
+      console.log('📄 Response data keys:', Object.keys(data || {})); // Debug log
+      
+      if (!res.ok) {
+        console.log('❌ Response not OK, setting error:', data.error); // Debug log
+        setError(data.error || "Something went wrong.");
+        return;
+      }
+      
+      if (data.explanation) {
+        console.log('✅ Setting explanation and metadata'); // Debug log
+        console.log('📝 Explanation length:', data.explanation?.length); // Debug log
+        console.log('📊 Metadata:', data.metadata); // Debug log
+        
+        setExplanation(data.explanation);
+        setMetadata(data.metadata);
+
+        console.log('✅ State updated successfully'); // Debug log
+
+        // Smooth scroll after data loads
+        setTimeout(() => {
+          smoothScrollToRef(explanationRef);
+        }, 200);
+      } else {
+        console.log('❌ No explanation in response'); // Debug log
+        setExplanation("Could not generate explanation.");
+        setMetadata(null);
+      }
+    } catch (error) {
+      console.error('❌ Error in handleExplainWithUrl:', error); // Debug log
+      if (error instanceof Error && error.name === 'AbortError') {
+        setError("Request timed out. Please try again.");
+      } else {
+        setExplanation("Something went wrong.");
+        setMetadata(null);
+        setError("Failed to fetch explanation. Please try again later.");
+      }
+    } finally {
+      console.log('🏁 Setting loading to false'); // Debug log
+      setLoading(false);
+      console.log('=== HANDLE EXPLAIN WITH URL END ==='); // Debug log
+    }
+  };
 
   const handleExplain = async () => {
-    if (!repoUrl) return;
+    console.log('handleExplain called with repoUrl:', repoUrl); // Debug log
+    if (!repoUrl || typeof repoUrl !== 'string') {
+      console.log('Invalid repoUrl, returning'); // Debug log
+      return;
+    }
     setError("");
     setLoading(true);
     setExplanation("");
@@ -121,19 +242,25 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-fuchsia-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
             <div className="relative bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
               <div className="flex flex-col gap-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={repoUrl}
-                    onChange={(e) => setRepoUrl(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !loading) handleExplain();
-                      if (e.key === "Escape") setRepoUrl("");
-                    }}
-                    placeholder="https://github.com/user/repo"
-                    className="w-full p-4 pl-12 rounded-xl bg-slate-800/50 text-white placeholder-slate-400 outline-none text-base border border-slate-700/60 focus:border-indigo-400/50 focus:ring-2 focus:ring-indigo-400/20 transition-all duration-200"
-                  />
-                </div>
+                                 <div className="relative">
+                   <input
+                     type="text"
+                     value={repoUrl || ""}
+                     onChange={(e) => setRepoUrl(e.target.value)}
+                     onKeyDown={(e) => {
+                       if (e.key === "Enter" && !loading) handleExplain();
+                       if (e.key === "Escape") setRepoUrl("");
+                     }}
+                     placeholder="https://github.com/user/repo"
+                     className="w-full p-4 pl-12 rounded-xl bg-slate-800/50 text-white placeholder-slate-400 outline-none text-base border border-slate-700/60 focus:border-indigo-400/50 focus:ring-2 focus:ring-indigo-400/20 transition-all duration-200"
+                   />
+                   {/* Loading indicator when loading from history */}
+                   {loading && repoUrl && (
+                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-400 border-t-transparent"></div>
+                     </div>
+                   )}
+                 </div>
                 <button
                   onClick={handleExplain}
                   className="w-full p-4 bg-gradient-to-r from-indigo-500 to-fuchsia-600 hover:from-indigo-600 hover:to-fuchsia-700 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-base"
@@ -152,6 +279,26 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+                 {/* Search History Section */}
+         <div className="max-w-4xl mx-auto mb-12">
+           <SearchHistory onLoadSearch={handleLoadFromHistory} />
+         </div>
+
+         {/* Loading from History Indicator */}
+         {loading && repoUrl && (
+           <div className="max-w-2xl mx-auto mb-8">
+             <div className="bg-indigo-500/10 border border-indigo-500/30 text-indigo-200 p-4 rounded-xl backdrop-blur-sm text-center">
+               <div className="flex items-center justify-center gap-3">
+                 <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-400 border-t-transparent"></div>
+                 <span className="text-sm font-medium">Loading repository from history...</span>
+               </div>
+             </div>
+           </div>
+         )}
+
+        
+         
 
         
 

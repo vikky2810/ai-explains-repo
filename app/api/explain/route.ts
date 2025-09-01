@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 import { parseGitHubUrl, GitHubService, AIService } from "@/lib/utils";
+import { saveSearchHistory } from "@/lib/services/database";
 import { ExplainRepoRequest, ExplainRepoResponse, APIErrorResponse } from "@/types";
 
 export async function POST(req: NextRequest) {
@@ -36,6 +38,25 @@ export async function POST(req: NextRequest) {
         explanation, 
         metadata 
       };
+
+              // Save search history if user is authenticated
+        try {
+          const { userId } = await auth();
+          if (userId) {
+            await saveSearchHistory(
+              userId,
+              repoUrl,
+              metadata.name,
+              owner,
+              explanation,
+              metadata
+            );
+          }
+        } catch (historyError) {
+          // Don't fail the main request if history saving fails
+          console.error("Failed to save search history:", historyError);
+        }
+
       return NextResponse.json(response);
     } catch (error) {
       console.error("Service error:", error);
