@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { RepoMetadata } from '@/types/api';
 
 // Database connection function
 function getSql() {
@@ -18,7 +19,7 @@ export interface UserSearchHistory {
   repoOwner: string;
   searchDate: Date | string; // Can be Date object or ISO string from database
   explanation: string;
-  metadata: any; // JSON metadata from the search
+  metadata: RepoMetadata; // Repository metadata
 }
 
 // Create the user_search_history table
@@ -59,7 +60,7 @@ export async function saveSearchHistory(
   repoName: string,
   repoOwner: string,
   explanation: string,
-  metadata: any
+  metadata: RepoMetadata
 ): Promise<void> {
   try {
     const sql = getSql();
@@ -82,13 +83,15 @@ export async function saveSearchHistory(
 export async function getUserSearchHistory(userId: string): Promise<UserSearchHistory[]> {
   try {
     const sql = getSql();
+    
     const results = await sql`
       SELECT * FROM user_search_history 
       WHERE user_id = ${userId}
       ORDER BY search_date DESC
       LIMIT 50
     `;
-    return results.map((row: any) => ({
+    
+    return results.map((row: Record<string, any>) => ({
       id: row.id,
       userId: row.user_id,
       repoUrl: row.repo_url, // Map snake_case to camelCase
@@ -96,7 +99,7 @@ export async function getUserSearchHistory(userId: string): Promise<UserSearchHi
       repoOwner: row.repo_owner, // Map snake_case to camelCase
       searchDate: row.search_date, // Keep as string, let component handle conversion
       explanation: row.explanation,
-      metadata: row.metadata || {}
+      metadata: row.metadata || {} as RepoMetadata
     }));
   } catch (error) {
     console.error('Error fetching user search history:', error);

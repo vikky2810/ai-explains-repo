@@ -3,7 +3,6 @@ import { auth } from '@clerk/nextjs/server';
 import { 
   getUserSearchHistory, 
   saveSearchHistory, 
-  deleteSearchHistory, 
   clearUserSearchHistory 
 } from '@/lib/services/database';
 

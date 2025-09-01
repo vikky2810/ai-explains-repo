@@ -60,18 +60,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
   };
 
   const handleHistoryItemClick = (repoUrl: string, itemId: string) => {
-    console.log('=== SEARCH HISTORY CLICK ==='); // Debug log
-    console.log('Clicked item with URL:', repoUrl); // Debug log
-    console.log('Clicked item ID:', itemId); // Debug log
-    console.log('onLoadSearch function exists:', !!onLoadSearch); // Debug log
-    
-    // Debug: Log the full item to see its structure
-    const clickedItem = history.find(item => item.id === itemId);
-    console.log('🔍 Full clicked item:', clickedItem); // Debug log
-    console.log('🔍 Item keys:', Object.keys(clickedItem || {})); // Debug log
-    
     if (onLoadSearch) {
-      console.log('Calling onLoadSearch with:', repoUrl); // Debug log
       setClickedItemId(itemId);
       onLoadSearch(repoUrl);
       
@@ -79,8 +68,6 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
       setTimeout(() => {
         setClickedItemId(null);
       }, 2000);
-    } else {
-      console.log('❌ onLoadSearch function is not available'); // Debug log
     }
   };
 

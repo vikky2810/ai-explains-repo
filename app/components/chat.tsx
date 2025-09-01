@@ -24,26 +24,9 @@ export default function Home() {
   // Keep ref in sync with state
   useEffect(() => {
     repoUrlRef.current = repoUrl;
-    console.log('🔄 repoUrl state changed to:', repoUrl); // Debug log
   }, [repoUrl]);
 
-  // Debug effect for explanation and metadata
-  useEffect(() => {
-    console.log('🔄 explanation state changed to:', explanation ? `${explanation.substring(0, 50)}...` : 'empty'); // Debug log
-  }, [explanation]);
-
-  useEffect(() => {
-    console.log('🔄 metadata state changed to:', metadata ? metadata.name : 'null'); // Debug log
-  }, [metadata]);
-
-  useEffect(() => {
-    console.log('🔄 loading state changed to:', loading); // Debug log
-  }, [loading]);
-
   const handleLoadFromHistory = (repoUrl: string) => {
-    console.log('=== LOADING FROM HISTORY START ==='); // Debug log
-    console.log('Loading from history:', repoUrl); // Debug log
-    
     // Clear previous results first
     setExplanation("");
     setMetadata(null);
@@ -51,23 +34,16 @@ export default function Home() {
     
     // Update state immediately
     setRepoUrl(repoUrl);
-    console.log('State updated, repoUrl is now:', repoUrl); // Debug log
     
     // Trigger search immediately with the URL parameter
-    console.log('=== TRIGGERING SEARCH ==='); // Debug log
-    console.log('Calling handleExplainWithUrl with:', repoUrl); // Debug log
     handleExplainWithUrl(repoUrl);
   };
 
   const handleExplainWithUrl = async (url: string) => {
-    console.log('=== HANDLE EXPLAIN WITH URL START ==='); // Debug log
-    console.log('handleExplainWithUrl called with:', url); // Debug log
     if (!url || typeof url !== 'string') {
-      console.log('❌ Invalid URL, returning'); // Debug log
       return;
     }
     
-    console.log('✅ Starting API call for URL:', url); // Debug log
     setError("");
     setLoading(true);
     setExplanation("");
@@ -77,7 +53,6 @@ export default function Home() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
-      console.log('🌐 Making fetch request to /api/explain with:', { repoUrl: url }); // Debug log
       const res = await fetch("/api/explain", {
         method: "POST",
         headers: {
@@ -89,39 +64,27 @@ export default function Home() {
 
       clearTimeout(timeoutId);
 
-      console.log('📡 Response received:', res.status, res.ok); // Debug log
       const data = await res.json();
-      console.log('📄 Response data received:', data); // Debug log
-      console.log('📄 Response data type:', typeof data); // Debug log
-      console.log('📄 Response data keys:', Object.keys(data || {})); // Debug log
       
       if (!res.ok) {
-        console.log('❌ Response not OK, setting error:', data.error); // Debug log
         setError(data.error || "Something went wrong.");
         return;
       }
       
       if (data.explanation) {
-        console.log('✅ Setting explanation and metadata'); // Debug log
-        console.log('📝 Explanation length:', data.explanation?.length); // Debug log
-        console.log('📊 Metadata:', data.metadata); // Debug log
-        
         setExplanation(data.explanation);
         setMetadata(data.metadata);
-
-        console.log('✅ State updated successfully'); // Debug log
 
         // Smooth scroll after data loads
         setTimeout(() => {
           smoothScrollToRef(explanationRef);
         }, 200);
       } else {
-        console.log('❌ No explanation in response'); // Debug log
         setExplanation("Could not generate explanation.");
         setMetadata(null);
       }
     } catch (error) {
-      console.error('❌ Error in handleExplainWithUrl:', error); // Debug log
+      console.error('Error in handleExplainWithUrl:', error);
       if (error instanceof Error && error.name === 'AbortError') {
         setError("Request timed out. Please try again.");
       } else {
@@ -130,16 +93,12 @@ export default function Home() {
         setError("Failed to fetch explanation. Please try again later.");
       }
     } finally {
-      console.log('🏁 Setting loading to false'); // Debug log
       setLoading(false);
-      console.log('=== HANDLE EXPLAIN WITH URL END ==='); // Debug log
     }
   };
 
   const handleExplain = async () => {
-    console.log('handleExplain called with repoUrl:', repoUrl); // Debug log
     if (!repoUrl || typeof repoUrl !== 'string') {
-      console.log('Invalid repoUrl, returning'); // Debug log
       return;
     }
     setError("");
