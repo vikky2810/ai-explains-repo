@@ -22,6 +22,18 @@ export interface UserSearchHistory {
   metadata: RepoMetadata; // Repository metadata
 }
 
+// Database row interface to avoid using 'any'
+interface DatabaseRow {
+  id: string;
+  user_id: string;
+  repo_url: string;
+  repo_name: string;
+  repo_owner: string;
+  search_date: string;
+  explanation: string;
+  metadata: RepoMetadata | null;
+}
+
 // Create the user_search_history table
 export async function createTables() {
   try {
@@ -91,7 +103,7 @@ export async function getUserSearchHistory(userId: string): Promise<UserSearchHi
       LIMIT 50
     `;
     
-    return results.map((row: Record<string, any>) => ({
+    return (results as DatabaseRow[]).map((row: DatabaseRow) => ({
       id: row.id,
       userId: row.user_id,
       repoUrl: row.repo_url, // Map snake_case to camelCase
