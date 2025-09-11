@@ -17,23 +17,23 @@ export const authOptions: NextAuthOptions = {
         mode: { label: "Mode", type: "text" }, // "login" or "register"
       },
       async authorize(credentials) {
-        const email = credentials?.email as string;
-        const password = credentials?.password as string;
-        const mode = (credentials?.mode as string) || "login";
+        const email = credentials?.email ?? "";
+        const password = credentials?.password ?? "";
+        const mode = credentials?.mode ?? "login";
         if (!email || !password) return null;
 
         if (mode === "register") {
           const existing = await findUserByEmail(email);
           if (existing && existing.password_hash) return null;
           const user = await createUser(email, password);
-          return { id: user.id, email: user.email } as any;
+          return { id: user.id, email: user.email };
         }
 
         const user = await findUserByEmail(email);
         if (!user || !user.password_hash) return null;
         const ok = await verifyPassword(password, user.password_hash);
         if (!ok) return null;
-        return { id: user.id, email: user.email } as any;
+        return { id: user.id, email: user.email };
       },
     }),
   ],

@@ -28,7 +28,7 @@ export async function ensureUserTables() {
 
 export async function findUserByEmail(email: string): Promise<DbUser | null> {
   const sql = getSql();
-  const rows = await sql`SELECT * FROM users WHERE email = ${email} LIMIT 1` as any[];
+  const rows = await sql`SELECT * FROM users WHERE email = ${email} LIMIT 1` as DbUser[];
   return rows[0] || null;
 }
 
@@ -40,7 +40,7 @@ export async function createUser(email: string, password?: string): Promise<DbUs
     VALUES (${email}, ${passwordHash})
     ON CONFLICT (email) DO UPDATE SET email = EXCLUDED.email
     RETURNING *
-  ` as any[];
+  ` as DbUser[];
   return rows[0];
 }
 

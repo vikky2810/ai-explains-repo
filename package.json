@@ -10,16 +10,17 @@
     "db:init": "tsx scripts/init-db.ts"
   },
   "dependencies": {
-    "next-auth": "^4.24.7",
     "@neondatabase/serverless": "^1.0.1",
     "bcryptjs": "^2.4.3",
     "next": "15.5.2",
+    "next-auth": "^4.24.7",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-markdown": "10.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",

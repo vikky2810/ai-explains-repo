@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
     await createUser(email, password);
     return NextResponse.json({ success: true });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'Registration failed' }, { status: 500 });
   }
 }

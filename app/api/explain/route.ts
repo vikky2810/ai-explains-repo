@@ -43,8 +43,8 @@ export async function POST(req: NextRequest) {
               // Save search history if user is authenticated
         try {
           const session = await getServerSession(authOptions);
-          const userId = session?.user?.email || session?.user?.id;
-          if (userId) {
+          const userId = session?.user?.email;
+          if (typeof userId === 'string' && userId.length > 0) {
             await saveSearchHistory(
               userId,
               repoUrl,

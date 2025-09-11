@@ -11,7 +11,7 @@ import {
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    const userId = session?.user?.email || session?.user?.id;
+    const userId = session?.user?.email;
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -32,7 +32,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    const userId = session?.user?.email || session?.user?.id;
+    const userId = session?.user?.email;
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    const userId = session?.user?.email || session?.user?.id;
+    const userId = session?.user?.email;
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
