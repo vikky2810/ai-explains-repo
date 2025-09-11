@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/authOptions';
 import { 
   getUserSearchHistory, 
   saveSearchHistory, 
@@ -9,7 +10,8 @@ import {
 // GET: Retrieve user's search history
 export async function GET() {
   try {
-    const { userId } = await auth();
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.email || session?.user?.id;
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -29,7 +31,8 @@ export async function GET() {
 // POST: Save a new search to history
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.email || session?.user?.id;
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -60,7 +63,8 @@ export async function POST(request: NextRequest) {
 // DELETE: Delete specific search or clear all history
 export async function DELETE(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const session = await getServerSession(authOptions);
+    const userId = session?.user?.email || session?.user?.id;
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

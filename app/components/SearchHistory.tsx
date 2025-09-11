@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useSession } from 'next-auth/react';
 import { UserSearchHistory } from '@/lib/services/database';
 
 interface SearchHistoryProps {
@@ -8,17 +8,17 @@ interface SearchHistoryProps {
 }
 
 export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
-  const { isSignedIn } = useAuth();
+  const { data: session } = useSession();
   const [history, setHistory] = useState<UserSearchHistory[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [clickedItemId, setClickedItemId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isSignedIn) {
+    if (session) {
       fetchHistory();
     }
-  }, [isSignedIn]);
+  }, [session]);
 
   const fetchHistory = async () => {
     setLoading(true);
@@ -92,7 +92,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
     return explanation.substring(0, maxLength).trim() + '...';
   };
 
-  if (!isSignedIn) {
+  if (!session) {
     return null;
   }
 

@@ -8,7 +8,7 @@ Explain any public GitHub repository in plain English. Paste a repo URL, and get
 - **Instant repo summaries**: Paste a GitHub URL → get a concise explanation.
 - **Smart sections**: TL;DR, What it does, Key features, Use cases (rendered as markdown).
 - **Repo metadata**: Stars, forks, last commit date, and link.
-- **Authentication (Clerk)**: Optional sign in/up (modal) and `UserButton` in the header.
+- **Authentication (NextAuth + Google)**: Simple Google sign-in button and session state.
 - **Polished UI**: Next.js App Router + Tailwind CSS, responsive hero page and chat page.
 
 ## 🧩 How it works
@@ -38,9 +38,13 @@ Create `.env.local` in the project root:
 # Google Gemini
 GEMINI_API_KEY=your_gemini_api_key
 
-# Clerk (Auth)
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-CLERK_SECRET_KEY=your_clerk_secret_key
+# NextAuth (Google + Email)
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+EMAIL_SERVER=smtp://user:pass@smtp.example.com:587
+EMAIL_FROM=Your App <no-reply@example.com>
 
 # Optional: GitHub token for higher rate limits / private repos
 # GITHUB_TOKEN=ghp_...

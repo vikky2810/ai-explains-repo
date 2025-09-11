@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 import { parseGitHubUrl, GitHubService, AIService } from "@/lib/utils";
 import { saveSearchHistory } from "@/lib/services/database";
 import { ExplainRepoRequest, ExplainRepoResponse, APIErrorResponse } from "@/types";
@@ -41,7 +42,8 @@ export async function POST(req: NextRequest) {
 
               // Save search history if user is authenticated
         try {
-          const { userId } = await auth();
+          const session = await getServerSession(authOptions);
+          const userId = session?.user?.email || session?.user?.id;
           if (userId) {
             await saveSearchHistory(
               userId,

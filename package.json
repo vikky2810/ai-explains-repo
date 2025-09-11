@@ -10,8 +10,9 @@
     "db:init": "tsx scripts/init-db.ts"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.26.0",
+    "next-auth": "^4.24.7",
     "@neondatabase/serverless": "^1.0.1",
+    "bcryptjs": "^2.4.3",
     "next": "15.5.2",
     "react": "19.1.1",
     "react-dom": "19.1.1",

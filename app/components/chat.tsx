@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { UserButton } from "@clerk/nextjs";
+import AuthButton from "./AuthButton";
 import { 
   splitMarkdownSections, 
   sectionColorClass, 
@@ -177,7 +177,7 @@ export default function Home() {
             <span>←</span>
             <span>Back</span>
           </button>
-          <UserButton />
+          <AuthButton />
         </div>
       </header>
 
