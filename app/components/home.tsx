@@ -116,7 +116,7 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
               <p className="mt-1 text-sm text-slate-400">We scan key files and infer architecture, libraries, and purpose.</p>
             </div>
             <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
-              <Image src="/next.svg" alt="Step 3" width={24} height={24} className="h-6 w-6 opacity-80" />
+            <Image src="/window.svg" alt="Step 2" width={24} height={24} className="h-6 w-6 opacity-80" />
               <h3 className="mt-3 font-semibold text-slate-200">3. Get a summary</h3>
               <p className="mt-1 text-sm text-slate-400">Receive a clear, concise brief with next steps and examples.</p>
             </div>

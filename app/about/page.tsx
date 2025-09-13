@@ -88,7 +88,7 @@ export default function AboutPage() {
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">📝</span>
+                    <span className="text-2xl">📊</span>
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">3. Get Summary</h3>
                   <p className="text-slate-300">Receive a clear, comprehensive explanation of the repository.</p>
