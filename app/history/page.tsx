@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import AuthButton from "../components/AuthButton";
 import SearchHistory from "../components/SearchHistory";
 
@@ -21,13 +22,13 @@ export default function HistoryPage() {
           <span className="text-lg font-semibold text-slate-200">AI Explains This Repo</span>
         </div>
         <div className="flex items-center gap-3">
-          <a 
+          <Link 
             href="/"
             className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-200 flex items-center gap-2"
           >
             <span>←</span>
             <span>Home</span>
-          </a>
+          </Link>
           <AuthButton />
         </div>
       </header>

@@ -1,15 +1,11 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import AuthButton from "../components/AuthButton";
-import { 
-  splitMarkdownSections, 
-  sectionColorClass, 
-  boldHeading,
-  smoothScrollToRef 
-} from "@/lib/utils";
-import { RepoMetadata, SectionProps } from "@/types";
+import { Section } from "../components/Section";
+import { smoothScrollToRef } from "@/lib/utils";
+import { RepoMetadata } from "@/types";
 import SearchHistory from "../components/SearchHistory";
 
 export default function ChatPage() {
@@ -26,16 +22,7 @@ export default function ChatPage() {
     repoUrlRef.current = repoUrl;
   }, [repoUrl]);
 
-  // Handle URL parameters for loading from history
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlParam = urlParams.get('url');
-    if (urlParam) {
-      handleLoadFromHistory(decodeURIComponent(urlParam));
-    }
-  }, []);
-
-  const handleLoadFromHistory = (repoUrl: string) => {
+  const handleLoadFromHistory = useCallback((repoUrl: string) => {
     // Clear previous results first
     setExplanation("");
     setMetadata(null);
@@ -46,7 +33,16 @@ export default function ChatPage() {
     
     // Trigger search immediately with the URL parameter
     handleExplainWithUrl(repoUrl);
-  };
+  }, []);
+
+  // Handle URL parameters for loading from history
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlParam = urlParams.get('url');
+    if (urlParam) {
+      handleLoadFromHistory(decodeURIComponent(urlParam));
+    }
+  }, [handleLoadFromHistory]);
 
   const handleExplainWithUrl = async (url: string) => {
     if (!url || typeof url !== 'string') {
@@ -179,13 +175,13 @@ export default function ChatPage() {
           <span className="text-lg font-semibold text-slate-200">AI Explains This Repo</span>
         </div>
         <div className="flex items-center gap-3">
-          <a 
+          <Link 
             href="/"
             className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-200 flex items-center gap-2"
           >
             <span>←</span>
             <span>Home</span>
-          </a>
+          </Link>
           <AuthButton />
         </div>
       </header>
@@ -377,57 +373,3 @@ export default function ChatPage() {
   );
 }
 
-export function Section({ title, markdown }: SectionProps) {
-  if (!markdown) return null;
-  const sections = splitMarkdownSections(markdown);
-
-  return (
-    <div className="bg-slate-900/60 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-800/80">
-      <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 flex items-center gap-3">
-        <span className="text-3xl">{title.split(' ')[0]}</span>
-        <span className="bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent">
-          {title.split(' ').slice(1).join(' ')}
-        </span>
-      </h2>
-
-      <div className="space-y-6">
-        {sections.map((sec, i) => (
-          <div
-            key={i}
-            className={`rounded-xl p-6 backdrop-blur-sm border border-slate-800/60 transition-all duration-200 hover:border-slate-700/80 ${
-              sectionColorClass(sec.heading)
-            }`}
-          >
-            <ReactMarkdown
-              components={{
-                h2: ({ children }) => (
-                  <h2 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
-                    <span className="w-2 h-2 bg-indigo-400 rounded-full"></span>
-                    {children}
-                  </h2>
-                ),
-                p: ({ children }) => (
-                  <p className="text-slate-200 leading-relaxed mb-3 last:mb-0">{children}</p>
-                ),
-                ul: ({ children }) => (
-                  <ul className="text-slate-200 space-y-2 mb-3 last:mb-0">{children}</ul>
-                ),
-                li: ({ children }) => (
-                  <li className="flex items-start gap-2">
-                    <span className="text-indigo-400 mt-1">•</span>
-                    <span>{children}</span>
-                  </li>
-                ),
-                strong: ({ children }) => (
-                  <strong className="text-white font-semibold">{children}</strong>
-                ),
-              }}
-            >
-              {`## ${boldHeading(sec.heading)}\n${sec.content}`}
-            </ReactMarkdown>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}

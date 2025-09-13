@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import AuthButton from "../components/AuthButton";
 
 export default function AboutPage() {
@@ -15,13 +16,13 @@ export default function AboutPage() {
           <span className="text-lg font-semibold text-slate-200">AI Explains This Repo</span>
         </div>
         <div className="flex items-center gap-3">
-          <a 
+          <Link 
             href="/"
             className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-200 flex items-center gap-2"
           >
             <span>←</span>
             <span>Home</span>
-          </a>
+          </Link>
           <AuthButton />
         </div>
       </header>
@@ -52,8 +53,8 @@ export default function AboutPage() {
               <div className="space-y-4 text-slate-200 leading-relaxed">
                 <p>
                   AI Explains This Repo is a powerful tool that analyzes GitHub repositories and provides 
-                  clear, human-friendly explanations of what the code does, how it's structured, and what 
-                  it's used for.
+                  clear, human-friendly explanations of what the code does, how it&apos;s structured, and what 
+                  it&apos;s used for.
                 </p>
                 <p>
                   Instead of spending hours reading through documentation and code files, you can get a 
@@ -186,20 +187,20 @@ export default function AboutPage() {
                 Try analyzing your first repository and see how AI can help you understand complex codebases.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
+                <Link
                   href="/explain"
                   className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-500 to-fuchsia-600 hover:from-indigo-600 hover:to-fuchsia-700 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                 >
                   <span>🚀</span>
                   <span>Try It Now</span>
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/"
                   className="inline-flex items-center gap-2 px-8 py-4 text-indigo-300 hover:text-indigo-200 hover:bg-slate-800/50 rounded-xl transition-all duration-200"
                 >
                   <span>←</span>
                   <span>Back to Home</span>
-                </a>
+                </Link>
               </div>
             </section>
           </div>

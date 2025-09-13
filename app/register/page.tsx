@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -46,7 +47,7 @@ export default function RegisterPage() {
       } else if (res?.ok) {
         router.push("/explain");
       }
-    } catch (error) {
+    } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -58,7 +59,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await signIn("google", { callbackUrl: "/explain" });
-    } catch (error) {
+    } catch {
       setError("Google sign-in failed. Please try again.");
       setLoading(false);
     }
@@ -194,24 +195,24 @@ export default function RegisterPage() {
           <div className="mt-4 text-center">
             <p className="text-slate-400 text-sm">
               Already have an account?{" "}
-              <a
+              <Link
                 href="/login"
                 className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors duration-200"
               >
                 Sign in here
-              </a>
+              </Link>
             </p>
           </div>
 
           {/* Back to Home */}
           <div className="mt-2 text-center">
-            <a
+            <Link
               href="/"
               className="text-slate-500 hover:text-slate-300 text-xs transition-colors duration-200 flex items-center justify-center gap-1"
             >
               <span>←</span>
               <span>Back to Home</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
