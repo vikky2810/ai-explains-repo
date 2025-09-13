@@ -15,6 +15,15 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
     }
   }, [session, onTryNow]);
 
+  const handleTryNow = () => {
+    if (session) {
+      onTryNow();
+    } else {
+      // Redirect to login page if not authenticated
+      window.location.href = '/login';
+    }
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950">
       <div className="pointer-events-none absolute inset-0">
@@ -51,7 +60,7 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
         </p>
         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
           <button
-            onClick={onTryNow}
+            onClick={handleTryNow}
             className="w-full rounded-lg bg-indigo-500 px-6 py-3 font-semibold text-white shadow-lg shadow-indigo-900/30 transition hover:bg-indigo-600 sm:w-auto"
           >
             Try it now 🚀

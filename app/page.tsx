@@ -1,15 +1,12 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import Home from './components/home';
-import Chat from './components/chat';
-import { AppState } from '@/types';
 
-export default function Hero() {
-  const [showChat, setShowChat] = useState<AppState['showChat']>(false);
+export default function HomePage() {
+  const handleTryNow = () => {
+    // Redirect to explain page
+    window.location.href = '/explain';
+  };
   
-  return (
-    <>
-      {showChat ? <Chat /> : <Home onTryNow={() => setShowChat(true)} />}
-    </>
-  );
+  return <Home onTryNow={handleTryNow} />;
 }
