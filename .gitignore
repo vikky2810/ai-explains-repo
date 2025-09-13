@@ -12,7 +12,8 @@
 
 # testing
 /coverage
-
+.next
+.vercel
 # next.js
 /.next/
 /out/
