@@ -6,9 +6,27 @@ import { useSession } from 'next-auth/react';
 import AuthButton from './AuthButton';
 import { HomeProps } from '@/types';
 
+type RazorpayOptions = {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  theme?: { color?: string };
+  handler?: () => void;
+  modal?: { escape?: boolean; confirm_close?: boolean };
+};
+
+interface RazorpayInstance {
+  open: () => void;
+}
+
+type RazorpayConstructor = new (options: RazorpayOptions) => RazorpayInstance;
+
 declare global {
   interface Window {
-    Razorpay?: any;
+    Razorpay?: RazorpayConstructor;
   }
 }
 
