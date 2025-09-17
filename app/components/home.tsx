@@ -1,10 +1,16 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import previewPng from '../../preview.png';
 import { useSession } from 'next-auth/react';
 import AuthButton from './AuthButton';
 import { HomeProps } from '@/types';
+
+declare global {
+  interface Window {
+    Razorpay?: any;
+  }
+}
 
 const Home: React.FC<HomeProps> = ({ onTryNow }) => {
   const { data: session } = useSession();
@@ -21,6 +27,51 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
     } else {
       // Redirect to login page if not authenticated
       window.location.href = '/login';
+    }
+  };
+
+  const [quantity, setQuantity] = useState<number>(1);
+  const [note, setNote] = useState<string>("");
+
+  const presets = useMemo(() => [1, 3, 5], []);
+  const unitPrice = 99; // ₹ per coffee
+  const totalAmount = useMemo(() => Math.max(1, quantity) * unitPrice, [quantity]);
+
+  const handleSupport = async (amount: number) => {
+    try {
+      const res = await fetch('/api/razorpay/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount, note, quantity }),
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || 'Failed to create order');
+      }
+      const data = await res.json();
+
+      if (!window.Razorpay) {
+        alert('Payment SDK not loaded. Please try again in a moment.');
+        return;
+      }
+
+      const rzp = new window.Razorpay({
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: 'Support AI Explains This Repo',
+        description: 'Thanks for your support! ❤️',
+        order_id: data.orderId,
+        theme: { color: '#6366f1' },
+        handler: function () {
+          alert('Payment successful. Thank you!');
+        },
+        modal: { escape: true, confirm_close: true },
+      });
+      rzp.open();
+    } catch (e) {
+      console.error(e);
+      alert('Unable to start payment. Please try again.');
     }
   };
 
@@ -83,6 +134,56 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
             <div className="text-2xl">🔒</div>
             <h3 className="mt-2 font-semibold text-slate-200">Optional login</h3>
             <p className="mt-1 text-sm text-slate-400">Sign in to save and revisit your summaries.</p>
+          </div>
+        </div>
+
+        <div className="mt-12 w-full max-w-5xl">
+          <div className="mx-auto max-w-xl rounded-3xl border border-slate-800/80 bg-slate-900/60 p-6 text-left shadow-xl">
+            <h2 className="text-xl font-bold text-slate-200 sm:text-2xl">Support me</h2>
+            <p className="mt-1 text-sm text-slate-400">If this project helps you, consider buying me a coffee.</p>
+
+            <div className="mt-5 rounded-2xl border border-slate-800/80 bg-slate-950/50 p-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10 ring-1 ring-indigo-400/20">☕</div>
+                <span className="text-slate-300">x</span>
+                <div className="flex items-center gap-2">
+                  {presets.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setQuantity(p)}
+                      className={`h-8 w-8 rounded-full text-sm font-medium transition ${
+                        quantity === p
+                          ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-900/30'
+                          : 'bg-slate-900/60 text-slate-200 ring-1 ring-slate-800 hover:ring-slate-700'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <input
+                    type="number"
+                    min={1}
+                    value={quantity}
+                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value || '1', 10)))}
+                    className="h-8 w-14 rounded-md border border-slate-800 bg-slate-900/60 px-2 text-center text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500/60"
+                  />
+                </div>
+              </div>
+
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Say something nice..."
+                className="mt-4 h-20 w-full resize-none rounded-xl border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm text-slate-200 placeholder-slate-500 outline-none focus:border-indigo-500/60"
+              />
+
+              <button
+                onClick={() => handleSupport(totalAmount)}
+                className="mt-4 w-full rounded-full bg-indigo-500 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-indigo-900/30 transition hover:bg-indigo-600"
+              >
+                Support ₹{totalAmount}
+              </button>
+            </div>
           </div>
         </div>
 
