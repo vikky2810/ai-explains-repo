@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Disallow sensitive areas
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /private/
+
+# Allow important pages
+Allow: /explain
+Allow: /history
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+Allow: /shipping
+Allow: /cancellation-refunds
+
+# Sitemap location
+Sitemap: https://ai-explains-repo.vercel.app/sitemap.xml
+
+# Crawl delay (optional - helps prevent overloading server)
+Crawl-delay: 1
