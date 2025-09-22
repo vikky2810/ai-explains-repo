@@ -17,5 +17,48 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Inter, sans-serif;
+}
+
+/* Brand-specific utility classes */
+@layer utilities {
+  .text-brand-deep-blue {
+    color: #1e40af;
+  }
+  
+  .text-brand-electric-blue {
+    color: #3b82f6;
+  }
+  
+  .text-brand-success-green {
+    color: #10b981;
+  }
+  
+  .text-brand-warning-orange {
+    color: #f59e0b;
+  }
+  
+  .text-brand-error-red {
+    color: #ef4444;
+  }
+  
+  .bg-brand-deep-blue {
+    background-color: #1e40af;
+  }
+  
+  .bg-brand-electric-blue {
+    background-color: #3b82f6;
+  }
+  
+  .bg-brand-success-green {
+    background-color: #10b981;
+  }
+  
+  .bg-brand-warning-orange {
+    background-color: #f59e0b;
+  }
+  
+  .bg-brand-error-red {
+    background-color: #ef4444;
+  }
 }

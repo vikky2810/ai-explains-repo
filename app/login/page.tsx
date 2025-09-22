@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Logo from "../components/Logo";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -53,8 +54,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md px-4">
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-indigo-500 to-fuchsia-600 rounded-full mb-4 shadow-2xl">
-            <span className="text-xl">🧠</span>
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-brand-electric-blue to-brand-success-green rounded-full mb-4 shadow-2xl">
+            <Logo size="md" />
           </div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-1">
             Welcome Back
@@ -78,7 +79,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-lg bg-slate-800/50 text-white placeholder-slate-400 outline-none border border-slate-700/60 focus:border-indigo-400/50 focus:ring-2 focus:ring-indigo-400/20 transition-all duration-200 text-sm"
+                className="w-full px-3 py-2 rounded-lg bg-slate-800/50 text-white placeholder-slate-400 outline-none border border-slate-700/60 focus:border-brand-electric-blue/50 focus:ring-2 focus:ring-brand-electric-blue/20 transition-all duration-200 text-sm"
                 placeholder="Enter your email"
               />
             </div>
@@ -94,7 +95,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-lg bg-slate-800/50 text-white placeholder-slate-400 outline-none border border-slate-700/60 focus:border-indigo-400/50 focus:ring-2 focus:ring-indigo-400/20 transition-all duration-200 text-sm"
+                className="w-full px-3 py-2 rounded-lg bg-slate-800/50 text-white placeholder-slate-400 outline-none border border-slate-700/60 focus:border-brand-electric-blue/50 focus:ring-2 focus:ring-brand-electric-blue/20 transition-all duration-200 text-sm"
                 placeholder="Enter your password"
               />
             </div>
@@ -110,7 +111,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 bg-gradient-to-r from-indigo-500 to-fuchsia-600 hover:from-indigo-600 hover:to-fuchsia-700 rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-sm"
+              className="w-full py-2 bg-gradient-to-r from-brand-electric-blue to-brand-success-green hover:from-brand-deep-blue hover:to-brand-electric-blue rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-sm"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
@@ -163,7 +164,7 @@ export default function LoginPage() {
               Don&apos;t have an account?{" "}
               <Link
                 href="/register"
-                className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors duration-200"
+                className="text-brand-electric-blue hover:text-brand-electric-blue/80 font-medium transition-colors duration-200"
               >
                 Sign up here
               </Link>

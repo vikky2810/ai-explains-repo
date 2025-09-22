@@ -3,14 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import AuthButton from "../components/AuthButton";
+import Logo from "../components/Logo";
 
 export default function CancellationRefundsPage() {
   return (
     <div className="min-h-screen bg-slate-950">
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-indigo-500/20 ring-1 ring-indigo-400/30 flex items-center justify-center">
-            <span className="text-xl">🧠</span>
+          <div className="h-9 w-9 rounded-lg bg-brand-electric-blue/20 ring-1 ring-brand-electric-blue/30 flex items-center justify-center">
+            <Logo size="sm" />
           </div>
           <span className="text-lg font-semibold text-slate-200">AI Explains This Repo</span>
         </div>

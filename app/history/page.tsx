@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import AuthButton from "../components/AuthButton";
 import SearchHistory from "../components/SearchHistory";
+import Logo from "../components/Logo";
 
 export default function HistoryPage() {
   const handleLoadFromHistory = (repoUrl: string) => {
@@ -16,8 +17,8 @@ export default function HistoryPage() {
       {/* Header */}
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-indigo-500/20 ring-1 ring-indigo-400/30 flex items-center justify-center">
-            <span className="text-xl">🧠</span>
+          <div className="h-9 w-9 rounded-lg bg-brand-electric-blue/20 ring-1 ring-brand-electric-blue/30 flex items-center justify-center">
+            <Logo size="sm" />
           </div>
           <span className="text-lg font-semibold text-slate-200">AI Explains This Repo</span>
         </div>
@@ -37,8 +38,8 @@ export default function HistoryPage() {
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-500 to-fuchsia-600 rounded-full mb-6 shadow-2xl">
-              <span className="text-2xl">📚</span>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-brand-electric-blue to-brand-success-green rounded-full mb-6 shadow-2xl">
+              <Logo size="md" />
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-3">
               Search History

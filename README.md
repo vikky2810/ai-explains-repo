@@ -1,23 +1,45 @@
 # 🧠 AI Explains This Repo
 
-Explain any public GitHub repository in plain English. Paste a repo URL, and get a clean, beginner‑friendly summary with key features and intended use.
+**Professional GitHub repository analysis platform** that provides deep insights into code quality, security, performance, and architecture. Unlike static analyzers, it doesn't just flag issues—it explains architecture, highlights risks, and gives developers actionable insights in plain English.
 
 ![Screenshot](preview.png)
 
-## ✨ Features
-- **Instant repo summaries**: Paste a GitHub URL → get a concise explanation.
-- **Smart sections**: TL;DR, What it does, Key features, Use cases (rendered as markdown).
-- **Repo metadata**: Stars, forks, last commit date, and link.
-- **Authentication (NextAuth + Google)**: Simple Google sign-in button and session state.
-- **Polished UI**: Next.js App Router + Tailwind CSS, responsive hero page and chat page.
+## ✨ Enhanced Features
+
+### 🔍 **Code Quality Analysis**
+- **Complexity Metrics**: Detect cyclomatic & cognitive complexity with AI-powered explanations
+- **Maintainability Index**: Generate maintainability scores plus plain-language improvement suggestions
+- **Best Practices**: Check ESLint/coding standards and explain violations in context
+- **Code Smells**: Flag anti-patterns, technical debt, and provide suggested refactoring approaches
+- **Documentation Coverage**: Assess README + inline docs; highlight missing areas
+
+### 🛡️ **Security Analysis**
+- **Vulnerability Scanning**: Detect known CVEs and explain their real-world impact
+- **Dependency Security**: Flag outdated or risky packages and suggest safer alternatives
+- **Secrets Detection**: Identify exposed API keys, passwords, and tokens with mitigation guidance
+- **Security Patterns**: Review authentication & authorization logic with AI-driven examples
+- **OWASP Compliance**: Map findings to OWASP Top 10 with clear developer-friendly guidance
+
+### ⚡ **Performance Analysis**
+- **Bundle Size Analysis**: Detect oversized JavaScript bundles and suggest code splitting
+- **Dependency Analysis**: Highlight heavy or unused packages with AI suggestions for alternatives
+- **Performance Bottlenecks**: Identify slow DB queries or inefficient algorithms
+- **Resource Usage**: Spot memory leaks or CPU-intensive functions with sample fixes
+- **Optimization Suggestions**: AI-generated performance tuning tips tailored to your codebase
+
+### 🏗️ **Architecture Analysis**
+- **Project Structure**: Review directory and module organization with clarity explanations
+- **Design Patterns**: Identify architectural patterns and highlight misapplications
+- **Dependency Graph**: Visualize internal/external dependencies and flag circular dependencies
+- **Coupling Analysis**: Detect high coupling/low cohesion with decoupling strategies
+- **Technology Stack**: Assess frameworks and libraries with modernization recommendations
 
 ## 🧩 How it works
-1. Client sends the repo URL to `POST /api/explain`.
-2. API fetches repo contents from GitHub (root files), builds a trimmed context, and fetches repo metadata.
-3. Sends context to Google Gemini to produce a markdown summary with specific sections.
-4. UI renders markdown nicely, grouped by section, with repo metadata on top.
+1. **Enter Repository URL**: Paste any public GitHub repository URL into the analyzer
+2. **AI Analysis**: Our AI scans code quality, security, performance, and architecture, generating plain-language explanations
+3. **Get Insights**: Receive detailed reports with actionable recommendations to improve your repository
 
-> Note: Currently only root-level files are fetched. Large/binary files are not filtered yet. See Roadmap.
+> **Mission**: "Make complex repositories clear, secure, and maintainable through AI-powered explanations."
 
 ## 🗂️ Project structure
 ```
@@ -59,9 +81,9 @@ pnpm dev
 
 ### Usage
 1. Open the site and paste a GitHub repo URL, e.g. `https://github.com/vercel/next.js`.
-2. Click “Explain Repo 🚀”.
-3. Read the generated summary. Click the repo title to open it on GitHub.
-4. Click “Explain another repo” to reset.
+2. Click "Analyze Repository 🚀".
+3. Review the comprehensive analysis covering code quality, security, performance, and architecture.
+4. Click "Analyze another repository" to start a new analysis.
 
 ## 🧱 Tech stack
 - Next.js 15 (App Router), React 19, TypeScript

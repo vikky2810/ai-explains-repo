@@ -3,14 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import AuthButton from "../components/AuthButton";
+import Logo from "../components/Logo";
 
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-slate-950">
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-indigo-500/20 ring-1 ring-indigo-400/30 flex items-center justify-center">
-            <span className="text-xl">🧠</span>
+          <div className="h-9 w-9 rounded-lg bg-brand-electric-blue/20 ring-1 ring-brand-electric-blue/30 flex items-center justify-center">
+            <Logo size="sm" />
           </div>
           <span className="text-lg font-semibold text-slate-200">AI Explains This Repo</span>
         </div>
@@ -53,7 +54,7 @@ export default function TermsPage() {
           <div className="text-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 text-indigo-300 hover:text-indigo-200 hover:bg-slate-800/50 rounded-xl transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3 text-brand-electric-blue hover:text-brand-electric-blue/80 hover:bg-slate-800/50 rounded-xl transition-all duration-200"
             >
               <span>←</span>
               <span>Back to Home</span>
