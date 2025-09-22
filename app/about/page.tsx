@@ -58,8 +58,8 @@ export default function AboutPage() {
                   performance bottlenecks, and architectural patterns.
                 </p>
                 <p>
-                  Unlike static analyzers that just flag issues, our AI explains the "why" behind problems and 
-                  provides actionable recommendations in plain English. Whether you're a developer trying to 
+                  Unlike static analyzers that just flag issues, our AI explains the &quot;why&quot; behind problems and 
+                  provides actionable recommendations in plain English. Whether you&apos;re a developer trying to 
                   understand a new codebase, a team lead assessing technical debt, or a security engineer 
                   evaluating risks, our platform gives you the insights you need to make informed decisions.
                 </p>
