@@ -12,6 +12,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "AI Explains This Repo - Understand Codebases Faster",
   description: "Professional GitHub repository analysis platform providing AI-powered insights into code quality, security, performance, and architecture. Get actionable recommendations in plain English.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
