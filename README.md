@@ -57,24 +57,48 @@ public/                  # SVG assets
 ## 🔐 Environment variables
 Create `.env.local` in the project root:
 ```
-# Google Gemini
-GEMINI_API_KEY=your_gemini_api_key
+# Database (Required for user registration and authentication)
+DATABASE_URL=postgresql://username:password@hostname:port/database
 
-# NextAuth (Google + Email)
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
+# NextAuth (Required for authentication)
 NEXTAUTH_SECRET=your_nextauth_secret
 NEXTAUTH_URL=http://localhost:3000
-EMAIL_SERVER=smtp://user:pass@smtp.example.com:587
-EMAIL_FROM=Your App <no-reply@example.com>
+
+# Google OAuth (Optional - for Google sign-in)
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# AI Service (Optional - for repository analysis)
+GEMINI_API_KEY=your_gemini_api_key
 
 # Optional: GitHub token for higher rate limits / private repos
 # GITHUB_TOKEN=ghp_...
 ```
 
 ## 🚀 Getting started
+
+### 1. Install dependencies
 ```bash
 pnpm install
+```
+
+### 2. Set up environment variables
+Create `.env.local` file with the required variables (see Environment variables section above).
+
+### 3. Set up database
+The application uses PostgreSQL. You can use:
+- **Neon** (recommended): Sign up at [neon.tech](https://neon.tech) and get your connection string
+- **Local PostgreSQL**: Install PostgreSQL locally and create a database
+- **Other providers**: Any PostgreSQL-compatible database
+
+### 4. Initialize database tables
+```bash
+# Run the database initialization script
+pnpm tsx scripts/init-db.ts
+```
+
+### 5. Start the development server
+```bash
 pnpm dev
 # visit http://localhost:3000
 ```

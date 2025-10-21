@@ -23,10 +23,17 @@ export const authOptions: NextAuthOptions = {
         if (!email || !password) return null;
 
         if (mode === "register") {
-          const existing = await findUserByEmail(email);
-          if (existing && existing.password_hash) return null;
-          const user = await createUser(email, password);
-          return { id: user.id, email: user.email };
+          try {
+            const existing = await findUserByEmail(email);
+            if (existing && existing.password_hash) {
+              throw new Error("User already exists with password");
+            }
+            const user = await createUser(email, password);
+            return { id: user.id, email: user.email };
+          } catch (error) {
+            console.error("Registration error:", error);
+            throw error;
+          }
         }
 
         const user = await findUserByEmail(email);

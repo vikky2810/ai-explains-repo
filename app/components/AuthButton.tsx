@@ -1,10 +1,28 @@
 "use client";
 
 import { signOut, useSession } from "next-auth/react";
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 export default function AuthButton() {
   const { data: session } = useSession();
+  const router = useRouter();
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const handleSignOut = async () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmSignOut = async () => {
+    setShowConfirmDialog(false);
+    await signOut({ redirect: false });
+    router.push("/");
+  };
+
+  const handleCancelSignOut = () => {
+    setShowConfirmDialog(false);
+  };
 
   if (!session) {
     return (
@@ -26,15 +44,27 @@ export default function AuthButton() {
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <p className="text-sm text-slate-300">Signed in as {session.user?.email}</p>
-      <button 
-        onClick={() => signOut()} 
-        className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 hover:border-slate-600 hover:bg-slate-700 transition-all duration-200"
-      >
-        Sign out
-      </button>
-    </div>
+    <>
+      <div className="flex items-center gap-3">
+        <p className="text-sm text-slate-300">Signed in as {session.user?.email}</p>
+        <button 
+          onClick={handleSignOut} 
+          className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-200 hover:border-slate-600 hover:bg-slate-700 transition-all duration-200"
+        >
+          Sign out
+        </button>
+      </div>
+      
+      <ConfirmationDialog
+        isOpen={showConfirmDialog}
+        onClose={handleCancelSignOut}
+        onConfirm={handleConfirmSignOut}
+        title="Sign Out"
+        message="Are you sure you want to sign out?"
+        confirmText="YES, SIGN OUT"
+        cancelText="NO"
+      />
+    </>
   );
 }
 
