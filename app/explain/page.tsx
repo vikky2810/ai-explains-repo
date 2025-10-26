@@ -281,8 +281,29 @@ export default function ChatPage() {
           </div>
         )}
 
-        {/* Error State */}
-        {error && (
+        {/* Error State - Centered Modal for Critical Errors */}
+        {error && error.includes("Repository not found or it's private") && (
+          <div className="fixed inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm z-50 px-4">
+            <div className="max-w-md w-full">
+              <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-8 rounded-2xl backdrop-blur-sm text-center shadow-2xl">
+                <div className="mb-6">
+                  <span className="text-6xl">⚠️</span>
+                </div>
+                <h3 className="text-2xl font-semibold mb-4 text-red-200">Something went wrong</h3>
+                <p className="text-base mb-6 text-red-300">{error}</p>
+                <button 
+                  onClick={() => setError("")}
+                  className="px-6 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded-xl transition-all duration-200 text-red-200 font-medium"
+                >
+                  Try Again
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Regular Error State for Other Errors */}
+        {error && !error.includes("Repository not found or it's private") && (
           <div className="max-w-2xl mx-auto mb-8">
             <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-6 rounded-xl backdrop-blur-sm">
               <div className="flex items-start gap-4">
