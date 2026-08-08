@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Logo from "../components/Logo";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -73,14 +74,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="h-screen bg-slate-950 flex items-center justify-center overflow-hidden">
+    <div className="min-h-[100dvh] bg-slate-950 flex items-center justify-center py-10">
       <div className="w-full max-w-md px-4">
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-brand-electric-blue to-brand-success-green rounded-full mb-4 shadow-2xl">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full mb-4 shadow-2xl">
             <Logo size="md" />
           </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-1">
+          <h1 className="text-2xl font-bold text-slate-50 mb-1">
             Create Account
           </h1>
           <p className="text-slate-300 text-sm">
@@ -187,7 +188,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 bg-gradient-to-r from-brand-electric-blue to-brand-success-green hover:from-brand-deep-blue hover:to-brand-electric-blue rounded-lg font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-sm"
+              className="w-full py-2 bg-accent hover:bg-accent-dim rounded-lg font-semibold text-slate-950 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-sm"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
@@ -253,7 +254,7 @@ export default function RegisterPage() {
               href="/"
               className="text-slate-500 hover:text-slate-300 text-xs transition-colors duration-200 flex items-center justify-center gap-1"
             >
-              <span>←</span>
+              <ArrowLeft size={16} weight="regular" />
               <span>Back to Home</span>
             </Link>
           </div>

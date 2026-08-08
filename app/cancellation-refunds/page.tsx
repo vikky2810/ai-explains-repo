@@ -4,10 +4,11 @@ import React from "react";
 import Link from "next/link";
 import AuthButton from "../components/AuthButton";
 import Logo from "../components/Logo";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 
 export default function CancellationRefundsPage() {
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-[100dvh] bg-slate-950">
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-lg bg-brand-electric-blue/20 ring-1 ring-brand-electric-blue/30 flex items-center justify-center">
@@ -20,7 +21,7 @@ export default function CancellationRefundsPage() {
             href="/"
             className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-200 flex items-center gap-2"
           >
-            <span>←</span>
+            <ArrowLeft size={16} weight="regular" />
             <span>Home</span>
           </Link>
           <AuthButton />
@@ -30,7 +31,7 @@ export default function CancellationRefundsPage() {
       <main className="px-4 sm:px-6 py-10 sm:py-12">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="text-center mb-6">
-            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent">
+            <h1 className="text-4xl sm:text-5xl font-bold text-slate-50">
               Cancellation & Refunds
             </h1>
           </div>
@@ -54,9 +55,9 @@ export default function CancellationRefundsPage() {
           <div className="text-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 text-indigo-300 hover:text-indigo-200 hover:bg-slate-800/50 rounded-xl transition-all duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3 text-slate-300 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all duration-200"
             >
-              <span>←</span>
+              <ArrowLeft size={16} weight="regular" />
               <span>Back to Home</span>
             </Link>
           </div>
@@ -64,7 +65,7 @@ export default function CancellationRefundsPage() {
       </main>
 
       <footer className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-10 pt-4 text-center text-xs text-slate-500">
-        <div className="border-t border-slate-800/80 pt-6">Built with ❤️ by Vikram</div>
+        <div className="border-t border-slate-800/80 pt-6">Built by Vikram</div>
       </footer>
     </div>
   );

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { UserSearchHistory } from '@/lib/services/database';
+import { Books, GitFork, NotePencil, Star } from "@phosphor-icons/react/dist/ssr";
 
 interface SearchHistoryProps {
   onLoadSearch?: (repoUrl: string) => void;
@@ -99,7 +100,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
       </div>
     );
   }
@@ -108,7 +109,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
     <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-slate-200 flex items-center gap-2">
-          <span className="text-2xl">📚</span>
+          <Books size={22} weight="regular" />
           Search History
         </h2>
         <div className="flex items-center gap-2">
@@ -116,7 +117,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
             <>
               <button
                 onClick={fetchHistory}
-                className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors px-3 py-1 rounded-lg hover:bg-indigo-400/10 flex items-center gap-1"
+                className="text-sm text-accent hover:text-slate-300 transition-colors px-3 py-1 rounded-lg hover:bg-accent/10 flex items-center gap-1"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -141,14 +142,12 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
       )}
 
       {history.length === 0 ? (
-        <div className="text-center py-12 text-slate-400">
-          <div className="text-6xl mb-4 animate-bounce">📚</div>
-          <p className="text-lg mb-2 font-medium">No search history yet</p>
-          <p className="text-sm text-slate-500 mb-4">Your repository searches will appear here</p>
-          <div className="inline-flex items-center gap-2 text-xs text-slate-500 bg-slate-800/50 px-3 py-2 rounded-full">
-            <span>💡</span>
-            <span>Search for a repository to get started!</span>
-          </div>
+        <div className="rounded-md border border-dashed border-slate-800 px-6 py-10 text-center">
+          <Books size={24} weight="regular" className="mx-auto text-slate-600" />
+          <p className="mt-3 font-medium text-slate-200">Nothing analyzed yet</p>
+          <p className="mt-1 text-sm text-slate-400">
+            Repositories you analyze will be listed here so you can reopen them.
+          </p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -157,7 +156,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
               key={item.id}
               onClick={() => handleHistoryItemClick(item.repoUrl, item.id)}
               className={`group bg-slate-800/50 border border-slate-700 rounded-xl p-5 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-200 cursor-pointer transform hover:scale-[1.02] hover:shadow-lg animate-in slide-in-from-left-2 ${
-                clickedItemId === item.id ? 'ring-2 ring-indigo-400 bg-indigo-900/20' : ''
+                clickedItemId === item.id ? 'ring-2 ring-accent bg-accent/20' : ''
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
@@ -165,8 +164,8 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
                  <div className="flex-1 min-w-0">
                    <h3 className={`font-semibold transition-colors truncate text-lg ${
                      clickedItemId === item.id 
-                       ? 'text-indigo-300' 
-                       : 'text-slate-200 group-hover:text-indigo-300'
+                       ? 'text-slate-300' 
+                       : 'text-slate-200 group-hover:text-slate-300'
                    }`}>
                      {item.repoOwner}/{item.repoName}
                    </h3>
@@ -174,9 +173,9 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
                      {formatDate(item.searchDate)}
                    </span>
                  </div>
-                 <div className="text-slate-400 group-hover:text-indigo-400 transition-colors">
+                 <div className="text-slate-400 group-hover:text-accent transition-colors">
                    {clickedItemId === item.id ? (
-                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-400 border-t-transparent"></div>
+                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-accent border-t-transparent"></div>
                    ) : (
                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -193,19 +192,19 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
                 <div className="flex items-center gap-4 text-xs text-slate-400">
                   {item.metadata.stars && (
                     <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-lg">
-                      <span className="text-yellow-400">⭐</span>
+                      <Star size={16} weight="regular" className="text-slate-400" />
                       <span>{item.metadata.stars.toLocaleString()}</span>
                     </div>
                   )}
                   {item.metadata.forks && (
                     <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-lg">
-                      <span className="text-blue-400">🍴</span>
+                      <GitFork size={16} weight="regular" className="text-accent" />
                       <span>{item.metadata.forks.toLocaleString()}</span>
                     </div>
                   )}
                   {item.metadata.description && (
                     <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-lg">
-                      <span className="text-green-400">📝</span>
+                      <NotePencil size={16} weight="regular" className="text-slate-400" />
                       <span className="truncate max-w-32">{item.metadata.description}</span>
                     </div>
                   )}
@@ -215,10 +214,10 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
                              <div className="mt-3 pt-3 border-t border-slate-700/50">
                  <span className={`text-xs transition-colors ${
                    clickedItemId === item.id 
-                     ? 'text-indigo-300 font-medium' 
-                     : 'text-indigo-400 group-hover:text-indigo-300'
+                     ? 'text-slate-300 font-medium' 
+                     : 'text-accent group-hover:text-slate-300'
                  }`}>
-                   {clickedItemId === item.id ? '🔄 Loading...' : 'Click to reload this search →'}
+                   {clickedItemId === item.id ? 'Loading...' : 'Click to reload this search'}
                  </span>
                </div>
             </div>

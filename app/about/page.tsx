@@ -4,10 +4,11 @@ import React from "react";
 import Link from "next/link";
 import AuthButton from "../components/AuthButton";
 import Logo from "../components/Logo";
+import { ArrowLeft, ArrowRight, Briefcase, Buildings, ChartBar, Code, GearSix, GraduationCap, Lightning, LinkSimple, MagnifyingGlass, ShieldCheck, Sparkle, Target } from "@phosphor-icons/react/dist/ssr";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-[100dvh] bg-slate-950">
       {/* Header */}
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
         <div className="flex items-center gap-3">
@@ -21,7 +22,7 @@ export default function AboutPage() {
             href="/"
             className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-200 flex items-center gap-2"
           >
-            <span>←</span>
+            <ArrowLeft size={16} weight="regular" />
             <span>Home</span>
           </Link>
           <AuthButton />
@@ -32,10 +33,10 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-brand-electric-blue to-brand-success-green rounded-full mb-8 shadow-2xl">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-accent rounded-full mb-8 shadow-2xl">
               <Logo size="lg" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent mb-6">
+            <h1 className="text-4xl sm:text-5xl font-bold text-slate-50 mb-6">
               About AI Explains This Repo
             </h1>
             <p className="text-slate-300 text-xl max-w-3xl mx-auto leading-relaxed">
@@ -48,7 +49,7 @@ export default function AboutPage() {
             {/* What We Do */}
             <section className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
               <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="text-3xl">🎯</span>
+                <Target size={28} weight="regular" />
                 <span>What We Do</span>
               </h2>
               <div className="space-y-4 text-slate-200 leading-relaxed">
@@ -69,27 +70,27 @@ export default function AboutPage() {
             {/* How It Works */}
             <section className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
               <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="text-3xl">⚙️</span>
+                <GearSix size={28} weight="regular" />
                 <span>How It Works</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="w-16 h-16 bg-brand-electric-blue/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">🔗</span>
+                    <LinkSimple size={22} weight="regular" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">1. Paste URL</h3>
                   <p className="text-slate-300">Simply paste any public GitHub repository URL into our interface.</p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-brand-electric-blue/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">🔍</span>
+                    <MagnifyingGlass size={22} weight="regular" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">2. AI Analysis</h3>
                   <p className="text-slate-300">Our AI scans code quality, security, performance, and architecture patterns.</p>
                 </div>
                 <div className="text-center">
                   <div className="w-16 h-16 bg-brand-electric-blue/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">📊</span>
+                    <ChartBar size={22} weight="regular" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">3. Get Insights</h3>
                   <p className="text-slate-300">Receive detailed reports with actionable recommendations to improve your repository.</p>
@@ -100,13 +101,13 @@ export default function AboutPage() {
             {/* Features */}
             <section className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
               <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="text-3xl">✨</span>
+                <Sparkle size={28} weight="regular" />
                 <span>Key Features</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-brand-electric-blue/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-brand-electric-blue">🔍</span>
+                    <MagnifyingGlass size={16} weight="regular" className="text-accent" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-2">Code Quality Analysis</h3>
@@ -115,7 +116,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-brand-electric-blue/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-brand-electric-blue">🛡️</span>
+                    <ShieldCheck size={16} weight="regular" className="text-accent" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-2">Security Insights</h3>
@@ -124,7 +125,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-brand-electric-blue/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-brand-electric-blue">⚡</span>
+                    <Lightning size={16} weight="regular" className="text-accent" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-2">Performance Optimization</h3>
@@ -133,7 +134,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-8 h-8 bg-brand-electric-blue/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-brand-electric-blue">🏗️</span>
+                    <Buildings size={16} weight="regular" className="text-accent" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-2">Architecture Analysis</h3>
@@ -146,34 +147,34 @@ export default function AboutPage() {
             {/* Use Cases */}
             <section className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-8 shadow-2xl">
               <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="text-3xl">🚀</span>
+                <ArrowRight size={28} weight="regular" />
                 <span>Perfect For</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">👨‍💻</span>
+                    <Code size={22} weight="regular" />
                     <h3 className="text-lg font-semibold text-white">Developers</h3>
                   </div>
                   <p className="text-slate-300 ml-8">Quickly understand new codebases before contributing or integrating.</p>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">🎓</span>
+                    <GraduationCap size={22} weight="regular" />
                     <h3 className="text-lg font-semibold text-white">Students</h3>
                   </div>
                   <p className="text-slate-300 ml-8">Learn from real-world projects and understand different coding patterns.</p>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">👔</span>
+                    <Briefcase size={22} weight="regular" />
                     <h3 className="text-lg font-semibold text-white">Managers</h3>
                   </div>
                   <p className="text-slate-300 ml-8">Get high-level understanding of technical projects and their scope.</p>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">🔍</span>
+                    <MagnifyingGlass size={22} weight="regular" />
                     <h3 className="text-lg font-semibold text-white">Researchers</h3>
                   </div>
                   <p className="text-slate-300 ml-8">Analyze codebases for research purposes or academic projects.</p>
@@ -182,7 +183,7 @@ export default function AboutPage() {
             </section>
 
             {/* CTA Section */}
-            <section className="text-center bg-gradient-to-r from-brand-electric-blue/10 to-brand-success-green/10 border border-brand-electric-blue/20 rounded-2xl p-8">
+            <section className="text-center border border-slate-800 bg-slate-900/40 rounded-2xl p-8">
               <h2 className="text-3xl font-bold text-white mb-4">Ready to Get Started?</h2>
               <p className="text-slate-300 text-lg mb-6 max-w-2xl mx-auto">
                 Try analyzing your first repository and see how AI can help you understand complex codebases.
@@ -190,16 +191,16 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/explain"
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-brand-electric-blue to-brand-success-green hover:from-brand-deep-blue hover:to-brand-electric-blue rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-accent hover:bg-accent-dim rounded-xl font-semibold text-slate-950 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                 >
-                  <span>🚀</span>
+                  <ArrowRight size={16} weight="regular" />
                   <span>Try It Now</span>
                 </Link>
                 <Link
                   href="/"
                   className="inline-flex items-center gap-2 px-8 py-4 text-brand-electric-blue hover:text-brand-electric-blue/80 hover:bg-slate-800/50 rounded-xl transition-all duration-200"
                 >
-                  <span>←</span>
+                  <ArrowLeft size={16} weight="regular" />
                   <span>Back to Home</span>
                 </Link>
               </div>
@@ -211,7 +212,7 @@ export default function AboutPage() {
       {/* Footer */}
       <footer className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-10 pt-4 text-center text-xs text-slate-500">
         <div className="border-t border-slate-800/80 pt-6">
-          Built with ❤️ by Vikram
+          Built by Vikram
         </div>
       </footer>
     </div>

@@ -2,63 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Single locked theme: dark. The product is a terminal-adjacent code tool and
+ * the whole app commits to one surface family, so sections never invert.
+ * `color-scheme` makes native controls (scrollbars, date pickers, autofill)
+ * render dark instead of flashing white.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --background: #0b0b0c;
+  --foreground: #ececea;
+  --surface: #141416;
+  --line: #26262a;
+  --muted: #8e8e88;
+  --accent: #a3e635;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-inter), Inter, sans-serif;
+  font-family: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
 }
 
-/* Brand-specific utility classes */
-@layer utilities {
-  .text-brand-deep-blue {
-    color: #1e40af;
+::selection {
+  background: var(--accent);
+  color: #0b0b0c;
+}
+
+/* Visible keyboard focus everywhere. Mouse users never see it. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/*
+ * Scroll-reveal primitive. Elements start shifted, then `.is-revealed` is
+ * added by an IntersectionObserver. CSS-only so it costs no main-thread work
+ * per frame, and it degrades to "already visible" when JS never runs.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
   }
-  
-  .text-brand-electric-blue {
-    color: #3b82f6;
+
+  .reveal.is-revealed {
+    opacity: 1;
+    transform: none;
   }
-  
-  .text-brand-success-green {
-    color: #10b981;
-  }
-  
-  .text-brand-warning-orange {
-    color: #f59e0b;
-  }
-  
-  .text-brand-error-red {
-    color: #ef4444;
-  }
-  
-  .bg-brand-deep-blue {
-    background-color: #1e40af;
-  }
-  
-  .bg-brand-electric-blue {
-    background-color: #3b82f6;
-  }
-  
-  .bg-brand-success-green {
-    background-color: #10b981;
-  }
-  
-  .bg-brand-warning-orange {
-    background-color: #f59e0b;
-  }
-  
-  .bg-brand-error-red {
-    background-color: #ef4444;
+}
+
+/* Every animation collapses to static under reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
