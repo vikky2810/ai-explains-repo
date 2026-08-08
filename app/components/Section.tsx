@@ -14,7 +14,7 @@ export function Section({ title, markdown }: SectionProps) {
   const sections = splitMarkdownSections(markdown);
 
   return (
-    <div className="bg-slate-900/60 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-800/80">
+    <div className="bg-slate-900/60 backdrop-blur-sm p-8 rounded-md shadow-2xl border border-slate-800/80">
       <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 flex items-center gap-3">
         <span className="text-3xl">{title.split(' ')[0]}</span>
         <span className="text-slate-50">
@@ -26,7 +26,7 @@ export function Section({ title, markdown }: SectionProps) {
         {sections.map((sec, i) => (
           <div
             key={i}
-            className={`rounded-xl p-6 backdrop-blur-sm border border-slate-800/60 transition-all duration-200 hover:border-slate-700/80 ${
+            className={`rounded-md p-6 backdrop-blur-sm border border-slate-800/60 transition-all duration-200 hover:border-slate-700/80 ${
               sectionColorClass(sec.heading)
             }`}
           >

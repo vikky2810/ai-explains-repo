@@ -56,7 +56,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md px-4">
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full mb-4 shadow-2xl">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-md mb-4 shadow-2xl">
             <Logo size="md" />
           </div>
           <h1 className="text-2xl font-bold text-slate-50 mb-1">
@@ -68,7 +68,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
+        <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-md p-6 shadow-2xl">
           <form onSubmit={handleEmailLogin} className="space-y-4">
             {/* Email Input */}
             <div>
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-3 py-2 rounded-lg bg-slate-800/50 text-white placeholder-slate-400 outline-none border border-slate-700/60 focus:border-brand-electric-blue/50 focus:ring-2 focus:ring-brand-electric-blue/20 transition-all duration-200 text-sm"
+                className="w-full px-3 py-2 rounded-md bg-slate-800/50 text-white placeholder-slate-400 outline-none border border-slate-700/60 focus:border-brand-electric-blue/50 focus:ring-2 focus:ring-brand-electric-blue/20 transition-all duration-200 text-sm"
                 placeholder="Enter your email"
               />
             </div>
@@ -98,7 +98,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-3 py-2 pr-10 rounded-lg bg-slate-800/50 text-white placeholder-slate-400 outline-none border border-slate-700/60 focus:border-brand-electric-blue/50 focus:ring-2 focus:ring-brand-electric-blue/20 transition-all duration-200 text-sm"
+                  className="w-full px-3 py-2 pr-10 rounded-md bg-slate-800/50 text-white placeholder-slate-400 outline-none border border-slate-700/60 focus:border-brand-electric-blue/50 focus:ring-2 focus:ring-brand-electric-blue/20 transition-all duration-200 text-sm"
                   placeholder="Enter your password"
                 />
                 <button
@@ -122,7 +122,7 @@ export default function LoginPage() {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-3 rounded-lg text-xs">
+              <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-3 rounded-md text-xs">
                 {error}
               </div>
             )}
@@ -131,7 +131,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2 bg-accent hover:bg-accent-dim rounded-lg font-semibold text-slate-950 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-sm"
+              className="w-full py-2 bg-accent hover:bg-accent-dim rounded-md font-semibold text-slate-950 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-sm"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
@@ -155,7 +155,7 @@ export default function LoginPage() {
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full py-2 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/60 hover:border-slate-600/60 rounded-lg font-semibold text-slate-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+            className="w-full py-2 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/60 hover:border-slate-600/60 rounded-md font-semibold text-slate-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path

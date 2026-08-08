@@ -106,7 +106,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
   }
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6">
+    <div className="bg-slate-900/60 border border-slate-800 rounded-md p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-slate-200 flex items-center gap-2">
           <Books size={22} weight="regular" />
@@ -117,7 +117,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
             <>
               <button
                 onClick={fetchHistory}
-                className="text-sm text-accent hover:text-slate-300 transition-colors px-3 py-1 rounded-lg hover:bg-accent/10 flex items-center gap-1"
+                className="text-sm text-accent hover:text-slate-300 transition-colors px-3 py-1 rounded-md hover:bg-accent/10 flex items-center gap-1"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -126,7 +126,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
               </button>
               <button
                 onClick={clearHistory}
-                className="text-sm text-red-400 hover:text-red-300 transition-colors px-3 py-1 rounded-lg hover:bg-red-400/10"
+                className="text-sm text-red-400 hover:text-red-300 transition-colors px-3 py-1 rounded-md hover:bg-red-400/10"
               >
                 Clear All
               </button>
@@ -136,7 +136,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
       </div>
 
       {error && (
-        <div className="text-red-400 text-sm mb-4 bg-red-400/10 border border-red-400/20 rounded-lg p-3">
+        <div className="text-red-400 text-sm mb-4 bg-red-400/10 border border-red-400/20 rounded-md p-3">
           {error}
         </div>
       )}
@@ -155,7 +155,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
             <div
               key={item.id}
               onClick={() => handleHistoryItemClick(item.repoUrl, item.id)}
-              className={`group bg-slate-800/50 border border-slate-700 rounded-xl p-5 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-200 cursor-pointer transform hover:scale-[1.02] hover:shadow-lg animate-in slide-in-from-left-2 ${
+              className={`group bg-slate-800/50 border border-slate-700 rounded-md p-5 hover:bg-slate-800/70 hover:border-slate-600 transition-all duration-200 cursor-pointer transform hover:scale-[1.02] hover:shadow-lg animate-in slide-in-from-left-2 ${
                 clickedItemId === item.id ? 'ring-2 ring-accent bg-accent/20' : ''
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
@@ -169,7 +169,7 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
                    }`}>
                      {item.repoOwner}/{item.repoName}
                    </h3>
-                   <span className="text-xs text-slate-400 bg-slate-700/50 px-2 py-1 rounded-full">
+                   <span className="text-xs text-slate-400 bg-slate-700/50 px-2 py-1 rounded-md">
                      {formatDate(item.searchDate)}
                    </span>
                  </div>
@@ -191,19 +191,19 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
               {item.metadata && (
                 <div className="flex items-center gap-4 text-xs text-slate-400">
                   {item.metadata.stars && (
-                    <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-lg">
+                    <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-md">
                       <Star size={16} weight="regular" className="text-slate-400" />
                       <span>{item.metadata.stars.toLocaleString()}</span>
                     </div>
                   )}
                   {item.metadata.forks && (
-                    <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-lg">
+                    <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-md">
                       <GitFork size={16} weight="regular" className="text-accent" />
                       <span>{item.metadata.forks.toLocaleString()}</span>
                     </div>
                   )}
                   {item.metadata.description && (
-                    <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-lg">
+                    <div className="flex items-center gap-1 bg-slate-700/50 px-2 py-1 rounded-md">
                       <NotePencil size={16} weight="regular" className="text-slate-400" />
                       <span className="truncate max-w-32">{item.metadata.description}</span>
                     </div>

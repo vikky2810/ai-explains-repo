@@ -165,7 +165,7 @@ export default function Home() {
       {/* Header with Profile Icon */}
       <header className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between px-6 pt-6">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-lg bg-accent/20 ring-1 ring-accent/30 flex items-center justify-center">
+          <div className="h-9 w-9 rounded-md bg-accent/20 ring-1 ring-accent/30 flex items-center justify-center">
             <Brain size={20} weight="regular" />
           </div>
           <span className="text-lg font-semibold text-slate-200">AI Explains This Repo</span>
@@ -173,7 +173,7 @@ export default function Home() {
         <div className="flex items-center gap-3">
           <button 
             onClick={() => window.history.back()}
-            className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-200 flex items-center gap-2"
+            className="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-md transition-all duration-200 flex items-center gap-2"
           >
             <ArrowLeft size={16} weight="regular" />
             <span>Back</span>
@@ -185,7 +185,7 @@ export default function Home() {
       <div className="px-4 sm:px-6 py-10 sm:py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-accent hover:bg-accent-dim rounded-full mb-6 shadow-2xl">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-accent hover:bg-accent-dim rounded-md mb-6 shadow-2xl">
             <Brain size={22} weight="regular" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-50 mb-3">
@@ -199,8 +199,8 @@ export default function Home() {
         {/* Input Section */}
         <div className="max-w-2xl mx-auto mb-12">
           <div className="relative group">
-            <div className="absolute inset-0 bg-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
-            <div className="relative bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
+            <div className="absolute inset-0 bg-transparent rounded-md blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+            <div className="relative bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-md p-6 shadow-2xl">
               <div className="flex flex-col gap-4">
                                  <div className="relative">
                    <input
@@ -212,7 +212,7 @@ export default function Home() {
                        if (e.key === "Escape") setRepoUrl("");
                      }}
                      placeholder="https://github.com/user/repo"
-                     className="w-full p-4 pl-12 rounded-xl bg-slate-800/50 text-white placeholder-slate-400 outline-none text-base border border-slate-700/60 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-200"
+                     className="w-full p-4 pl-12 rounded-md bg-slate-800/50 text-white placeholder-slate-400 outline-none text-base border border-slate-700/60 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-200"
                    />
                    {/* Loading indicator when loading from history */}
                    {loading && repoUrl && (
@@ -223,7 +223,7 @@ export default function Home() {
                  </div>
                 <button
                   onClick={handleExplain}
-                  className="w-full p-4 bg-accent hover:bg-accent-dim rounded-xl font-semibold text-slate-950 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-base"
+                  className="w-full p-4 bg-accent hover:bg-accent-dim rounded-md font-semibold text-slate-950 shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed text-base"
                   disabled={loading}
                 >
                   {loading ? (
@@ -248,7 +248,7 @@ export default function Home() {
          {/* Loading from History Indicator */}
          {loading && repoUrl && (
            <div className="max-w-2xl mx-auto mb-8">
-             <div className="bg-accent/10 border border-accent/30 text-slate-200 p-4 rounded-xl backdrop-blur-sm text-center">
+             <div className="bg-accent/10 border border-accent/30 text-slate-200 p-4 rounded-md backdrop-blur-sm text-center">
                <div className="flex items-center justify-center gap-3">
                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-accent border-t-transparent"></div>
                  <span className="text-sm font-medium">Loading repository from history...</span>
@@ -267,7 +267,7 @@ export default function Home() {
           <div className="fixed inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm z-50">
             <div className="text-center flex flex-col items-center">
               <div className="relative mx-auto mb-6">
-                <div className="w-24 h-24 border-4 border-slate-800 rounded-full"></div>
+                <div className="w-24 h-24 border-4 border-slate-800 rounded-md"></div>
                 <div className="absolute top-0 left-0 w-24 h-24 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
               </div>
               <p className="text-slate-200 text-xl font-medium mb-2">Analyzing repository...</p>
@@ -280,7 +280,7 @@ export default function Home() {
         {error && error.includes("Repository not found or it's private") && (
           <div className="fixed inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm z-50 px-4">
             <div className="max-w-md w-full">
-              <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-8 rounded-2xl backdrop-blur-sm text-center shadow-2xl">
+              <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-8 rounded-md backdrop-blur-sm text-center shadow-2xl">
                 <div className="mb-6">
                   <Warning size={48} weight="regular" />
                 </div>
@@ -288,7 +288,7 @@ export default function Home() {
                 <p className="text-base mb-6 text-red-300">{error}</p>
                 <button 
                   onClick={() => setError("")}
-                  className="px-6 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded-xl transition-all duration-200 text-red-200 font-medium"
+                  className="px-6 py-3 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 rounded-md transition-all duration-200 text-red-200 font-medium"
                 >
                   Try Again
                 </button>
@@ -300,7 +300,7 @@ export default function Home() {
         {/* Regular Error State for Other Errors */}
         {error && !error.includes("Repository not found or it's private") && (
           <div className="max-w-2xl mx-auto mb-8">
-            <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-red-500/10 border border-red-500/30 text-red-200 p-6 rounded-md backdrop-blur-sm">
               <div className="flex items-start gap-4">
                 <Warning size={22} weight="regular" className="mt-1" />
                 <div className="flex-1">
@@ -324,7 +324,7 @@ export default function Home() {
             {/* Repository Metadata Card */}
             {metadata && (
               <div className="mb-8">
-                <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-2xl p-6 shadow-2xl">
+                <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-md p-6 shadow-2xl">
                   <div className="flex flex-col gap-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -348,16 +348,16 @@ export default function Home() {
                     </div>
                     
                     <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-800/80">
-                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg">
+                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
                         <Star size={16} weight="regular" className="text-slate-400" />
                         <span className="text-slate-200 font-medium">{metadata.stars.toLocaleString()}</span>
                       </div>
-                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg">
+                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
                         <GitFork size={16} weight="regular" className="text-accent" />
                         <span className="text-slate-200 font-medium">{metadata.forks.toLocaleString()}</span>
                       </div>
                       {metadata.lastCommitDate && (
-                        <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg">
+                        <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
                           <Clock size={16} weight="regular" className="text-slate-400" />
                           <span className="text-sm">
                             Last commit: {new Date(metadata.lastCommitDate).toLocaleDateString()}
@@ -377,7 +377,7 @@ export default function Home() {
             <div className="text-center mt-8">
               <button
                 onClick={handleReset}
-                className="inline-flex items-center gap-2 px-6 py-3 text-slate-300 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all duration-200 text-base font-medium"
+                className="inline-flex items-center gap-2 px-6 py-3 text-slate-300 hover:text-slate-200 hover:bg-slate-800/50 rounded-md transition-all duration-200 text-base font-medium"
               >
                 <ArrowsClockwise size={16} weight="regular" />
                 <span>Analyze Another Repository</span>
@@ -395,7 +395,7 @@ export function Section({ title, markdown }: SectionProps) {
   const sections = splitMarkdownSections(markdown);
 
   return (
-    <div className="bg-slate-900/60 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-slate-800/80">
+    <div className="bg-slate-900/60 backdrop-blur-sm p-8 rounded-md shadow-2xl border border-slate-800/80">
       <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 flex items-center gap-3">
         <span className="text-3xl">{title.split(' ')[0]}</span>
         <span className="text-slate-50">
@@ -407,7 +407,7 @@ export function Section({ title, markdown }: SectionProps) {
         {sections.map((sec, i) => (
           <div
             key={i}
-            className={`rounded-xl p-6 backdrop-blur-sm border border-slate-800/60 transition-all duration-200 hover:border-slate-700/80 ${
+            className={`rounded-md p-6 backdrop-blur-sm border border-slate-800/60 transition-all duration-200 hover:border-slate-700/80 ${
               sectionColorClass(sec.heading)
             }`}
           >
