@@ -1,15 +1,25 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { UserSearchHistory } from '@/lib/services/database';
 import { Books, GitFork, NotePencil, Star } from "@phosphor-icons/react/dist/ssr";
 
 interface SearchHistoryProps {
   onLoadSearch?: (repoUrl: string) => void;
+  /**
+   * How to pitch history to a signed-out visitor. `card` suits /history, where
+   * the panel is the whole point; `compact` suits /explain, where a full card
+   * would shove the analysis they came for below the fold.
+   */
+  signedOutView?: 'card' | 'compact';
 }
 
-export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
-  const { data: session } = useSession();
+export default function SearchHistory({
+  onLoadSearch,
+  signedOutView = 'card',
+}: SearchHistoryProps) {
+  const { data: session, status } = useSession();
   const [history, setHistory] = useState<UserSearchHistory[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -93,8 +103,56 @@ export default function SearchHistory({ onLoadSearch }: SearchHistoryProps) {
     return explanation.substring(0, maxLength).trim() + '...';
   };
 
-  if (!session) {
+  // Nothing to show or offer until NextAuth resolves; rendering the signed-out
+  // pitch here would flash it at users who are in fact signed in.
+  if (status === 'loading') {
     return null;
+  }
+
+  // Analysis itself is free, so an anonymous visitor is not locked out of
+  // anything here -- history is simply the thing an account buys them.
+  if (!session) {
+    if (signedOutView === 'compact') {
+      return (
+        <p className="text-center text-sm text-slate-400">
+          Analysis is free, no account needed.{' '}
+          <Link
+            href="/login"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            Sign in
+          </Link>{' '}
+          to keep a history of the repos you analyze.
+        </p>
+      );
+    }
+
+    return (
+      <div className="bg-slate-900/60 border border-slate-800 rounded-md p-6">
+        <div className="rounded-md border border-dashed border-slate-800 px-6 py-10 text-center">
+          <Books size={24} weight="regular" className="mx-auto text-slate-600" />
+          <p className="mt-3 font-medium text-slate-200">History needs an account</p>
+          <p className="mx-auto mt-1 max-w-sm text-sm text-slate-400">
+            Analyzing repositories is free and always will be. Sign in and every
+            repo you analyze gets saved here so you can reopen it later.
+          </p>
+          <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/login"
+              className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-accent-dim"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/register"
+              className="text-sm text-slate-300 underline-offset-2 transition-colors hover:text-slate-100 hover:underline"
+            >
+              Create an account
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (loading) {

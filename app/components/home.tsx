@@ -85,7 +85,9 @@ const STEPS = [
 const SAMPLE_REPOS = ['expressjs/express', 'honojs/hono', 'sindresorhus/got'];
 
 const Home: React.FC<HomeProps> = ({ onTryNow }) => {
-  const { data: session } = useSession();
+  // Analysis is free and needs no account. The session is read only to decide
+  // whether to nudge the visitor about history, which is the one signed-in perk.
+  const { status: sessionStatus } = useSession();
   const router = useRouter();
 
   const [repoUrl, setRepoUrl] = useState('');
@@ -101,11 +103,6 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
   const handleAnalyze = (event: React.FormEvent) => {
     event.preventDefault();
     const url = repoUrl.trim();
-
-    if (!session) {
-      router.push('/login');
-      return;
-    }
 
     if (!url) {
       onTryNow();
@@ -254,6 +251,33 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
                   Analyze repository
                   <ArrowRight size={16} weight={ICON_WEIGHT} />
                 </button>
+
+                {/* Rendered only once the session resolves, so the copy never
+                    flips from "sign in" to "saved" in front of the visitor. */}
+                {sessionStatus === 'unauthenticated' ? (
+                  <p className="mt-3 text-center text-xs text-slate-400">
+                    Free, no account needed.{' '}
+                    <Link
+                      href="/login"
+                      className="text-accent underline-offset-2 hover:underline"
+                    >
+                      Sign in
+                    </Link>{' '}
+                    to save your history.
+                  </p>
+                ) : null}
+                {sessionStatus === 'authenticated' ? (
+                  <p className="mt-3 text-center text-xs text-slate-400">
+                    Saved to your{' '}
+                    <Link
+                      href="/history"
+                      className="text-accent underline-offset-2 hover:underline"
+                    >
+                      history
+                    </Link>{' '}
+                    automatically.
+                  </p>
+                ) : null}
 
                 <div className="mt-5 border-t border-slate-800 pt-4">
                   <p className="font-mono text-xs text-slate-400">Try one</p>

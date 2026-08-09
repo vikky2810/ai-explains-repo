@@ -244,7 +244,7 @@ export default function ChatPage() {
 
                  {/* Search History Section */}
          <div className="max-w-4xl mx-auto mb-12">
-           <SearchHistory onLoadSearch={handleLoadFromHistory} />
+           <SearchHistory onLoadSearch={handleLoadFromHistory} signedOutView="compact" />
          </div>
 
          {/* Loading from History Indicator */}
