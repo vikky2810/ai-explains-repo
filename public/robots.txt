@@ -14,8 +14,6 @@ Allow: /about
 Allow: /contact
 Allow: /privacy
 Allow: /terms
-Allow: /shipping
-Allow: /cancellation-refunds
 
 # Sitemap location
 Sitemap: https://ai-explains-repo.vercel.app/sitemap.xml

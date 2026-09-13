@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 
 import Providers from "./providers";
@@ -39,12 +38,6 @@ export default function RootLayout({
         className={`${geist.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <Providers>{children}</Providers>
-        {/* Payment SDK is only needed by the support panel, well below the
-            fold. Loading it lazily keeps it off the critical path. */}
-        <Script
-          src="https://checkout.razorpay.com/v1/checkout.js"
-          strategy="lazyOnload"
-        />
       </body>
     </html>
   );

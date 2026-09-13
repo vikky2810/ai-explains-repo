@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import {
   ArrowRight,
   CodeSimple,
-  Coffee,
   Lightning,
   ShieldCheck,
   TreeStructure,
@@ -16,30 +15,6 @@ import AuthButton from './AuthButton';
 import Logo from './Logo';
 import Reveal from './Reveal';
 import { HomeProps } from '@/types';
-
-type RazorpayOptions = {
-  key: string;
-  amount: number;
-  currency: string;
-  name: string;
-  description: string;
-  order_id: string;
-  theme?: { color?: string };
-  handler?: () => void;
-  modal?: { escape?: boolean; confirm_close?: boolean };
-};
-
-interface RazorpayInstance {
-  open: () => void;
-}
-
-type RazorpayConstructor = new (options: RazorpayOptions) => RazorpayInstance;
-
-declare global {
-  interface Window {
-    Razorpay?: RazorpayConstructor;
-  }
-}
 
 /** One icon family, one weight, set in a single place. */
 const ICON_WEIGHT = 'regular' as const;
@@ -93,13 +68,6 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
   const [repoUrl, setRepoUrl] = useState('');
   const [formError, setFormError] = useState('');
 
-  const [quantity, setQuantity] = useState<number>(1);
-  const [note, setNote] = useState<string>('');
-
-  const presets = useMemo(() => [1, 3, 5], []);
-  const unitPrice = 99; // rupees per coffee
-  const totalAmount = useMemo(() => Math.max(1, quantity) * unitPrice, [quantity]);
-
   const handleAnalyze = (event: React.FormEvent) => {
     event.preventDefault();
     const url = repoUrl.trim();
@@ -116,44 +84,6 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
 
     setFormError('');
     router.push(`/explain?url=${encodeURIComponent(url)}`);
-  };
-
-  const handleSupport = async (amount: number) => {
-    try {
-      const res = await fetch('/api/razorpay/order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount, note, quantity }),
-      });
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || 'Failed to create order');
-      }
-      const data = await res.json();
-
-      if (!window.Razorpay) {
-        alert('The payment SDK is still loading. Please try again in a moment.');
-        return;
-      }
-
-      const rzp = new window.Razorpay({
-        key: data.keyId,
-        amount: data.amount,
-        currency: data.currency,
-        name: 'Support AI Explains This Repo',
-        description: 'Thanks for keeping this running.',
-        order_id: data.orderId,
-        theme: { color: '#a3e635' },
-        handler: function () {
-          alert('Payment successful. Thank you.');
-        },
-        modal: { escape: true, confirm_close: true },
-      });
-      rzp.open();
-    } catch (e) {
-      console.error(e);
-      alert('Unable to start the payment. Please try again.');
-    }
   };
 
   return (
@@ -433,7 +363,7 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
             </div>
 
             <div className="lg:col-span-8">
-              <ol className="divide-y divide-slate-800 border-t border-slate-800">
+              <ol className="divide-y divide-slate-800">
                 {STEPS.map((step, i) => (
                   <li key={step.title}>
                     <Reveal delay={i * 80}>
@@ -453,82 +383,6 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
           </div>
         </section>
 
-        {/* ------------------------------------------------------------ support */}
-        <section className="border-t border-slate-800/70">
-          <div className="mx-auto w-full max-w-content px-5 py-16 lg:px-8 lg:py-24">
-            <Reveal>
-              <div className="mx-auto max-w-xl">
-                <div className="flex items-center gap-2.5">
-                  <Coffee size={20} weight={ICON_WEIGHT} className="text-accent" />
-                  <h2 className="text-2xl font-medium tracking-[-0.02em] text-slate-50">
-                    Support the project
-                  </h2>
-                </div>
-                <p className="mt-3 text-[15px] leading-relaxed text-slate-300">
-                  This runs on a personal API budget. A coffee helps keep it free
-                  to use.
-                </p>
-
-                <div className="mt-7 rounded-md border border-slate-800 bg-slate-900/50 p-5">
-                  <fieldset>
-                    <legend className="font-mono text-xs text-slate-300">
-                      How many coffees
-                    </legend>
-                    <div className="mt-3 flex items-center gap-2">
-                      {presets.map((p) => (
-                        <button
-                          key={p}
-                          type="button"
-                          onClick={() => setQuantity(p)}
-                          aria-pressed={quantity === p}
-                          className={`h-10 w-10 rounded-md text-sm font-medium transition-colors ${
-                            quantity === p
-                              ? 'bg-accent text-slate-950'
-                              : 'border border-slate-700 text-slate-200 hover:border-slate-600'
-                          }`}
-                        >
-                          {p}
-                        </button>
-                      ))}
-                      <input
-                        type="number"
-                        min={1}
-                        value={quantity}
-                        aria-label="Custom number of coffees"
-                        onChange={(e) =>
-                          setQuantity(Math.max(1, parseInt(e.target.value || '1', 10)))
-                        }
-                        className="h-10 w-20 rounded-md border border-slate-700 bg-slate-950 px-2 text-center font-mono text-sm text-slate-100 transition-colors focus:border-accent focus:outline-none"
-                      />
-                    </div>
-                  </fieldset>
-
-                  <label
-                    htmlFor="support-note"
-                    className="mt-5 block font-mono text-xs text-slate-300"
-                  >
-                    Note (optional)
-                  </label>
-                  <textarea
-                    id="support-note"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    placeholder="Say something nice"
-                    className="mt-2 h-20 w-full resize-none rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 transition-colors focus:border-accent focus:outline-none"
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => handleSupport(totalAmount)}
-                    className="mt-4 w-full rounded-md border border-slate-700 py-3 text-sm font-semibold text-slate-100 transition-colors hover:border-slate-500 hover:bg-slate-900"
-                  >
-                    Send &#8377;{totalAmount}
-                  </button>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </section>
       </main>
 
       {/* ------------------------------------------------------------- footer */}
@@ -544,8 +398,6 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
             <Link href="/contact" className="transition-colors hover:text-slate-200">Contact</Link>
             <Link href="/privacy" className="transition-colors hover:text-slate-200">Privacy</Link>
             <Link href="/terms" className="transition-colors hover:text-slate-200">Terms</Link>
-            <Link href="/cancellation-refunds" className="transition-colors hover:text-slate-200">Refunds</Link>
-            <Link href="/shipping" className="transition-colors hover:text-slate-200">Delivery</Link>
           </nav>
         </div>
       </footer>

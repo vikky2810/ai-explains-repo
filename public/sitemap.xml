@@ -68,17 +68,4 @@
     <priority>0.5</priority>
   </url>
   
-  <url>
-    <loc>https://ai-explains-repo.vercel.app/shipping</loc>
-    <lastmod>2024-12-19</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://ai-explains-repo.vercel.app/cancellation-refunds</loc>
-    <lastmod>2024-12-19</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
 </urlset>
