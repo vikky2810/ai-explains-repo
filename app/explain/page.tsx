@@ -8,7 +8,7 @@ import { smoothScrollToRef } from "@/lib/utils";
 import { RepoMetadata } from "@/types";
 import SearchHistory from "../components/SearchHistory";
 import Logo from "../components/Logo";
-import { ArrowLeft, ArrowsClockwise, Clock, GitFork, LinkSimple, Star, Warning } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft, ArrowsClockwise, Clock, GitFork, Info, LinkSimple, Star, Warning } from "@phosphor-icons/react/dist/ssr";
 
 export default function ChatPage() {
   const [repoUrl, setRepoUrl] = useState<string>("");
@@ -202,6 +202,16 @@ export default function ChatPage() {
 
           {/* Input Section */}
           <div className="mt-8 rounded-md border border-slate-800 bg-slate-900/60 p-5">
+            <div
+              role="note"
+              className="mb-3 flex items-start gap-2 rounded-md border border-slate-700/80 bg-slate-800/50 px-3 py-2.5 text-xs leading-relaxed text-slate-300"
+            >
+              <Info size={16} weight="regular" className="mt-px shrink-0 text-slate-400" />
+              <span>
+                Works with public GitHub repositories only — private repos are
+                not supported.
+              </span>
+            </div>
             <label htmlFor="repo-url" className="block font-mono text-xs text-slate-300">
               Repository URL
             </label>

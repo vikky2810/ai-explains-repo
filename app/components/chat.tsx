@@ -11,7 +11,7 @@ import {
 } from "@/lib/utils";
 import { RepoMetadata, SectionProps } from "@/types";
 import SearchHistory from "./SearchHistory";
-import { ArrowLeft, ArrowsClockwise, Brain, Clock, GitFork, LinkSimple, Star, Warning } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft, ArrowsClockwise, Brain, Clock, GitFork, Info, LinkSimple, Star, Warning } from "@phosphor-icons/react/dist/ssr";
 
 export default function Home() {
   const [repoUrl, setRepoUrl] = useState<string>("");
@@ -202,7 +202,17 @@ export default function Home() {
             <div className="absolute inset-0 bg-transparent rounded-md blur-xl group-hover:blur-2xl transition-all duration-300"></div>
             <div className="relative bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-md p-6 shadow-2xl">
               <div className="flex flex-col gap-4">
-                                 <div className="relative">
+                <div
+                  role="note"
+                  className="flex items-start gap-2 rounded-md border border-slate-700/80 bg-slate-800/50 px-3 py-2.5 text-xs leading-relaxed text-slate-300"
+                >
+                  <Info size={16} weight="regular" className="mt-px shrink-0 text-slate-400" />
+                  <span>
+                    Works with public GitHub repositories only — private repos are
+                    not supported.
+                  </span>
+                </div>
+                                  <div className="relative">
                    <input
                      type="text"
                      value={repoUrl || ""}

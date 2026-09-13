@@ -7,6 +7,7 @@ import { useSession } from 'next-auth/react';
 import {
   ArrowRight,
   CodeSimple,
+  Info,
   Lightning,
   ShieldCheck,
   TreeStructure,
@@ -144,6 +145,16 @@ const Home: React.FC<HomeProps> = ({ onTryNow }) => {
                 onSubmit={handleAnalyze}
                 className="rounded-md border border-slate-800 bg-slate-900/70 p-5"
               >
+                <div
+                  role="note"
+                  className="mb-4 flex items-start gap-2 rounded-md border border-slate-700/80 bg-slate-800/50 px-3 py-2.5 text-xs leading-relaxed text-slate-300"
+                >
+                  <Info size={16} weight="regular" className="mt-px shrink-0 text-slate-400" />
+                  <span>
+                    Works with public GitHub repositories only — private repos
+                    are not supported.
+                  </span>
+                </div>
                 <label
                   htmlFor="repo-url"
                   className="block font-mono text-xs text-slate-300"

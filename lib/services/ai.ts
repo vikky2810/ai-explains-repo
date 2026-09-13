@@ -5,7 +5,7 @@
 import { AIExplanationRequest } from "@/types";
 
 export class AIService {
-  private static readonly GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+  private static readonly GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
   private static readonly DEFAULT_MAX_WORDS = 300;
 
   /**
