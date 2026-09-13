@@ -277,7 +277,7 @@ export default function Home() {
           <div className="fixed inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm z-50">
             <div className="text-center flex flex-col items-center">
               <div className="relative mx-auto mb-6">
-                <div className="w-24 h-24 border-4 border-slate-800 rounded-md"></div>
+                <div className="w-24 h-24 border-4 border-slate-800 rounded-full"></div>
                 <div className="absolute top-0 left-0 w-24 h-24 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
               </div>
               <p className="text-slate-200 text-xl font-medium mb-2">Analyzing repository...</p>
