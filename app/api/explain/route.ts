@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { parseGitHubUrl, GitHubService, AIService } from "@/lib/utils";
 import { saveSearchHistory } from "@/lib/services/database";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/services/rateLimit";
 import { ExplainRepoRequest, ExplainRepoResponse, APIErrorResponse } from "@/types";
 
 export async function POST(req: NextRequest) {
@@ -22,6 +23,15 @@ export async function POST(req: NextRequest) {
     }
 
     const { owner, repo } = repoInfo;
+
+    const rateLimit = await checkRateLimit(req, RATE_LIMITS.explain);
+    if (!rateLimit.allowed) {
+      const errorResponse: APIErrorResponse = { error: rateLimit.message };
+      return NextResponse.json(errorResponse, {
+        status: 429,
+        headers: { "Retry-After": String(rateLimit.retryAfter) },
+      });
+    }
 
     try {
       // Metadata gives the default branch the file tree is read from

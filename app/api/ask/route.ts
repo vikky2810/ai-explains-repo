@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseGitHubUrl, GitHubService, AIService } from "@/lib/utils";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/services/rateLimit";
 import { AskRepoRequest, AskRepoResponse, APIErrorResponse, ChatMessage } from "@/types";
 
 const MAX_QUESTION_LENGTH = 500;
@@ -35,6 +36,15 @@ export async function POST(req: NextRequest) {
           (m?.role === "user" || m?.role === "assistant") && typeof m?.content === "string"
       )
     : [];
+
+  const rateLimit = await checkRateLimit(req, RATE_LIMITS.ask);
+  if (!rateLimit.allowed) {
+    const errorResponse: APIErrorResponse = { error: rateLimit.message };
+    return NextResponse.json(errorResponse, {
+      status: 429,
+      headers: { "Retry-After": String(rateLimit.retryAfter) },
+    });
+  }
 
   try {
     const { owner, repo } = repoInfo;

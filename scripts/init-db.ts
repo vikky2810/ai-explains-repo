@@ -1,6 +1,7 @@
 import { config } from 'dotenv';
 import { createTables } from '../lib/services/database';
 import { ensureUserTables } from '../lib/services/users';
+import { ensureRateLimitTable } from '../lib/services/rateLimit';
 
 // Load environment variables
 config({ path: '.env' });
@@ -16,6 +17,10 @@ async function initDatabase() {
     // Create search history tables
     console.log('Creating search history tables...');
     await createTables();
+    
+    // Create rate limit table
+    console.log('Creating rate limit table...');
+    await ensureRateLimitTable();
     
     console.log('Database initialized successfully!');
     process.exit(0);
