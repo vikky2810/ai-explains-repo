@@ -5,85 +5,68 @@ import Link from "next/link";
 import AuthButton from "../components/AuthButton";
 import { Section } from "../components/Section";
 import { smoothScrollToRef } from "@/lib/utils";
-import { RepoMetadata } from "@/types";
+import { ExplainDepth, RepoMetadata } from "@/types";
+import { RepoChat } from "../components/RepoChat";
 import SearchHistory from "../components/SearchHistory";
 import Logo from "../components/Logo";
-import { ArrowLeft, ArrowsClockwise, Clock, GitFork, Info, LinkSimple, Star, Warning } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft, ArrowsClockwise, Clock, Code, GitFork, Info, LinkSimple, Scales, Star, Warning } from "@phosphor-icons/react/dist/ssr";
+
+const DEPTH_OPTIONS: { value: ExplainDepth; label: string; hint: string }[] = [
+  { value: "quick", label: "Quick summary", hint: "Stack, features and how to run it" },
+  { value: "deep", label: "Deep dive", hint: "Adds structure, flow diagram, where to start and risks" },
+];
+
+function maturityLabel(metadata: RepoMetadata): string | null {
+  if (metadata.archived) return "Archived";
+  if (!metadata.lastCommitDate) return null;
+  const days = (Date.now() - new Date(metadata.lastCommitDate).getTime()) / 86_400_000;
+  const activity = days <= 90 ? "Actively maintained" : days <= 365 ? "Occasionally updated" : "Inactive for over a year";
+  const reach = metadata.stars >= 1000 ? "widely used" : metadata.stars >= 100 ? "some adoption" : "small project";
+  return `${activity} · ${reach}`;
+}
 
 export default function ChatPage() {
   const [repoUrl, setRepoUrl] = useState<string>("");
+  const [depth, setDepth] = useState<ExplainDepth>("deep");
   const [loading, setLoading] = useState(false);
   const [explanation, setExplanation] = useState("");
   const [metadata, setMetadata] = useState<RepoMetadata | null>(null);
+  const [analyzedUrl, setAnalyzedUrl] = useState("");
   const [error, setError] = useState("");
   const explanationRef = useRef<HTMLDivElement>(null);
-  const repoUrlRef = useRef<string>("");
   // Guards against React Strict Mode running the URL-param effect twice in dev
   const loadedUrlParamRef = useRef<string | null>(null);
 
-  // Keep ref in sync with state
-  useEffect(() => {
-    repoUrlRef.current = repoUrl;
-  }, [repoUrl]);
-
-  const handleLoadFromHistory = useCallback((repoUrl: string) => {
-    // Clear previous results first
-    setExplanation("");
-    setMetadata(null);
-    setError("");
-    
-    // Update state immediately
-    setRepoUrl(repoUrl);
-    
-    // Trigger search immediately with the URL parameter
-    handleExplainWithUrl(repoUrl);
-  }, []);
-
-  // Handle URL parameters for loading from history
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlParam = urlParams.get('url');
-    if (urlParam && loadedUrlParamRef.current !== urlParam) {
-      loadedUrlParamRef.current = urlParam;
-      handleLoadFromHistory(decodeURIComponent(urlParam));
-    }
-  }, [handleLoadFromHistory]);
-
-  const handleExplainWithUrl = async (url: string) => {
+  const handleExplainWithUrl = useCallback(async (url: string, selectedDepth: ExplainDepth) => {
     if (!url || typeof url !== 'string') {
       return;
     }
-    
+
     setError("");
     setLoading(true);
     setExplanation("");
 
     try {
-      // Add timeout to prevent infinite loading
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-
       const res = await fetch("/api/explain", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ repoUrl: url }),
-        signal: controller.signal,
+        body: JSON.stringify({ repoUrl: url, depth: selectedDepth }),
+        signal: AbortSignal.timeout(60000),
       });
 
-      clearTimeout(timeoutId);
-
       const data = await res.json();
-      
+
       if (!res.ok) {
         setError(data.error || "Something went wrong.");
         return;
       }
-      
+
       if (data.explanation) {
         setExplanation(data.explanation);
         setMetadata(data.metadata);
+        setAnalyzedUrl(url);
 
         // Smooth scroll after data loads
         setTimeout(() => {
@@ -95,7 +78,7 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error('Error in handleExplainWithUrl:', error);
-      if (error instanceof Error && error.name === 'AbortError') {
+      if (error instanceof Error && error.name === 'TimeoutError') {
         setError("Request timed out. Please try again.");
       } else {
         setExplanation("Something went wrong.");
@@ -105,67 +88,39 @@ export default function ChatPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleExplain = async () => {
-    if (!repoUrl || typeof repoUrl !== 'string') {
-      return;
-    }
-    setError("");
-    setLoading(true);
+  const handleLoadFromHistory = useCallback((repoUrl: string, selectedDepth: ExplainDepth = "deep") => {
+    // Clear previous results first
     setExplanation("");
+    setMetadata(null);
+    setError("");
 
-    try {
-      // Add timeout to prevent infinite loading
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    setRepoUrl(repoUrl);
+    setDepth(selectedDepth);
+    handleExplainWithUrl(repoUrl, selectedDepth);
+  }, [handleExplainWithUrl]);
 
-      const res = await fetch("/api/explain", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ repoUrl }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Something went wrong.");
-        return;
-      }
-      if (data.explanation) {
-        setExplanation(data.explanation);
-        setMetadata(data.metadata);
-
-        // Smooth scroll after data loads
-        setTimeout(() => {
-          smoothScrollToRef(explanationRef);
-        }, 200);
-      } else {
-        setExplanation("Could not generate explanation.");
-        setMetadata(null);
-      }
-    } catch (error) {
-      console.error(error);
-      if (error instanceof Error && error.name === 'AbortError') {
-        setError("Request timed out. Please try again.");
-      } else {
-        setExplanation("Something went wrong.");
-        setMetadata(null);
-        setError("Failed to fetch explanation. Please try again later.");
-      }
-    } finally {
-      setLoading(false);
+  // Handle URL parameters for loading from history
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlParam = urlParams.get('url');
+    if (urlParam && loadedUrlParamRef.current !== urlParam) {
+      loadedUrlParamRef.current = urlParam;
+      handleLoadFromHistory(
+        decodeURIComponent(urlParam),
+        urlParams.get('depth') === 'quick' ? 'quick' : 'deep'
+      );
     }
-  };
+  }, [handleLoadFromHistory]);
+
+  const handleExplain = () => handleExplainWithUrl(repoUrl, depth);
 
   const handleReset = () => {
     setRepoUrl("");
     setExplanation("");
     setMetadata(null);
+    setAnalyzedUrl("");
     setError("");
   };
 
@@ -238,6 +193,32 @@ export default function ChatPage() {
                 </div>
               )}
             </div>
+            <fieldset className="mt-4">
+              <legend className="font-mono text-xs text-slate-300">Depth</legend>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {DEPTH_OPTIONS.map((option) => (
+                  <label
+                    key={option.value}
+                    className={`cursor-pointer rounded-md border px-3 py-2.5 transition-colors ${
+                      depth === option.value
+                        ? "border-accent bg-accent/10"
+                        : "border-slate-700 hover:border-slate-500"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="depth"
+                      value={option.value}
+                      checked={depth === option.value}
+                      onChange={() => setDepth(option.value)}
+                      className="sr-only"
+                    />
+                    <span className="block text-sm font-medium text-slate-100">{option.label}</span>
+                    <span className="mt-0.5 block text-xs leading-snug text-slate-400">{option.hint}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
             <button
               onClick={handleExplain}
               className="mt-3 w-full rounded-md bg-accent px-4 py-3 text-sm font-semibold text-slate-950 transition-all hover:bg-accent-dim active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
@@ -356,6 +337,9 @@ export default function ChatPage() {
                             {metadata.description}
                           </p>
                         )}
+                        {maturityLabel(metadata) && (
+                          <p className="mt-2 font-mono text-xs text-slate-400">{maturityLabel(metadata)}</p>
+                        )}
                       </div>
                       <div className="flex items-center gap-2 text-slate-400">
                         <LinkSimple size={16} weight="regular" />
@@ -379,6 +363,16 @@ export default function ChatPage() {
                           </span>
                         </div>
                       )}
+                      {metadata.language && (
+                        <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
+                          <Code size={16} weight="regular" className="text-slate-400" />
+                          <span className="text-sm">{metadata.language}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
+                        <Scales size={16} weight="regular" className="text-slate-400" />
+                        <span className="text-sm">{metadata.license ?? "No license"}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -387,6 +381,8 @@ export default function ChatPage() {
 
             {/* AI Explanation */}
             {explanation && <Section title="AI Analysis" markdown={explanation} />}
+
+            {explanation && analyzedUrl && <RepoChat key={analyzedUrl} repoUrl={analyzedUrl} />}
 
             {/* Reset Button */}
             <div className="text-center mt-8">

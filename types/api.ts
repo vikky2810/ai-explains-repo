@@ -15,28 +15,62 @@ export interface RepoMetadata {
   forks: number;
   url: string;
   lastCommitDate?: string;
+  defaultBranch?: string;
+  language?: string;
+  license?: string;
+  topics?: string[];
+  openIssues?: number;
+  archived?: boolean;
 }
 
-export interface RepoFile {
-  name: string;
-  type: string;
-  download_url?: string;
+export interface RepoFacts {
+  fileCount: number;
+  hasTests: boolean;
+  hasCI: boolean;
+  hasLicense: boolean;
+  hasDocker: boolean;
+  committedEnvFiles: string[];
 }
+
+export interface RepoContext {
+  tree: string;
+  files: string;
+  facts: RepoFacts;
+}
+
+export type ExplainDepth = "quick" | "deep";
 
 // AI service types
 export interface AIExplanationRequest {
-  repositoryContents: string;
-  maxWords?: number;
+  context: RepoContext;
+  metadata: RepoMetadata;
+  depth: ExplainDepth;
+}
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
 }
 
 // API response types
 export interface ExplainRepoRequest {
   repoUrl: string;
+  depth?: ExplainDepth;
 }
 
 export interface ExplainRepoResponse {
   explanation: string;
   metadata: RepoMetadata;
+}
+
+export interface AskRepoRequest {
+  repoUrl: string;
+  question: string;
+  history?: ChatMessage[];
+}
+
+export interface AskRepoResponse {
+  answer: string;
 }
 
 export interface APIErrorResponse {

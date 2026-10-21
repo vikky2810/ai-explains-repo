@@ -27,10 +27,12 @@ export function splitMarkdownSections(markdown: string): MarkdownSection[] {
  */
 export function sectionColorClass(heading: string): string {
   const h = heading.toLowerCase();
-  if (h.includes("tl;dr")) return "bg-yellow-900/30";
+  if (h === "summary" || h.includes("tl;dr")) return "bg-yellow-900/30";
   if (h.includes("what this project")) return "bg-blue-900/30";
   if (h.includes("key feature")) return "bg-green-900/30";
   if (h.includes("intended use")) return "bg-pink-900/30";
+  // Amber is the theme's warning colour, so it is kept for risks only
+  if (h.includes("things to watch")) return "bg-amber-900/20";
   return "bg-slate-700/40";
 }
 
@@ -40,6 +42,7 @@ export function sectionColorClass(heading: string): string {
 export function boldHeading(heading: string): string {
   const match = heading.toLowerCase();
   if (
+    match === "summary" ||
     match.includes("tl;dr") ||
     match.includes("what this project") ||
     match.includes("key feature")

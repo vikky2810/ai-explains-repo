@@ -7,7 +7,8 @@ import { ExplainRepoRequest, ExplainRepoResponse, APIErrorResponse } from "@/typ
 
 export async function POST(req: NextRequest) {
   try {
-    const { repoUrl }: ExplainRepoRequest = await req.json();
+    const { repoUrl, depth: requestedDepth }: ExplainRepoRequest = await req.json();
+    const depth = requestedDepth === "quick" ? "quick" : "deep";
 
     if (!repoUrl) {
       const errorResponse: APIErrorResponse = { error: "Repo URL is required" };
@@ -23,16 +24,14 @@ export async function POST(req: NextRequest) {
     const { owner, repo } = repoInfo;
 
     try {
-      // Get repository metadata and contents using services
-      const [metadata, repositoryContents] = await Promise.all([
-        GitHubService.getRepoMetadata(owner, repo),
-        GitHubService.getConcatenatedContents(owner, repo, 5000)
-      ]);
+      // Metadata gives the default branch the file tree is read from
+      const metadata = await GitHubService.getRepoMetadata(owner, repo);
+      const context = await GitHubService.getRepoContext(owner, repo, metadata, depth);
 
-      // Generate explanation using AI service
       const explanation = await AIService.generateExplanation({
-        repositoryContents,
-        maxWords: 300
+        context,
+        metadata,
+        depth,
       });
 
       const response: ExplainRepoResponse = { 
