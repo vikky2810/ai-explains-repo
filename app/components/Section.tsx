@@ -2,6 +2,7 @@
 
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { 
   splitMarkdownSections, 
   sectionColorClass, 
@@ -31,6 +32,7 @@ export function Section({ title, markdown }: SectionProps) {
             }`}
           >
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               components={{
                 h2: ({ children }) => (
                   <h2 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
@@ -52,6 +54,17 @@ export function Section({ title, markdown }: SectionProps) {
                 ),
                 strong: ({ children }) => (
                   <strong className="text-white font-semibold">{children}</strong>
+                ),
+                table: ({ children }) => (
+                  <div className="overflow-x-auto mb-3 last:mb-0">
+                    <table className="w-full text-left text-slate-200 border-collapse">{children}</table>
+                  </div>
+                ),
+                th: ({ children }) => (
+                  <th className="py-2 pr-4 font-semibold text-white border-b border-slate-700">{children}</th>
+                ),
+                td: ({ children }) => (
+                  <td className="py-2 pr-4 align-top border-b border-slate-800">{children}</td>
                 ),
               }}
             >

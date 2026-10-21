@@ -18,6 +18,8 @@ export default function ChatPage() {
   const [error, setError] = useState("");
   const explanationRef = useRef<HTMLDivElement>(null);
   const repoUrlRef = useRef<string>("");
+  // Guards against React Strict Mode running the URL-param effect twice in dev
+  const loadedUrlParamRef = useRef<string | null>(null);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -41,7 +43,8 @@ export default function ChatPage() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const urlParam = urlParams.get('url');
-    if (urlParam) {
+    if (urlParam && loadedUrlParamRef.current !== urlParam) {
+      loadedUrlParamRef.current = urlParam;
       handleLoadFromHistory(decodeURIComponent(urlParam));
     }
   }, [handleLoadFromHistory]);
