@@ -27,13 +27,11 @@ export function splitMarkdownSections(markdown: string): MarkdownSection[] {
  */
 export function sectionColorClass(heading: string): string {
   const h = heading.toLowerCase();
-  if (h === "summary" || h.includes("tl;dr")) return "bg-yellow-900/30";
-  if (h.includes("what this project")) return "bg-blue-900/30";
-  if (h.includes("key feature")) return "bg-green-900/30";
-  if (h.includes("intended use")) return "bg-pink-900/30";
-  // Amber is the theme's warning colour, so it is kept for risks only
+  // One accent only: the summary gets the lime tint, risks keep the theme's
+  // warning amber, everything else stays neutral.
+  if (h === "summary" || h.includes("tl;dr")) return "bg-accent/[0.05] border-accent/20";
   if (h.includes("things to watch")) return "bg-amber-900/20";
-  return "bg-slate-700/40";
+  return "bg-slate-900/40";
 }
 
 /**

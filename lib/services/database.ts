@@ -34,6 +34,13 @@ interface DatabaseRow {
   metadata: RepoMetadata | null;
 }
 
+// Older rows stored GitHub's full_name ("owner/repo") as the repo name.
+// Strip the owner so callers can always render `${owner}/${name}`.
+function shortRepoName(name: string, owner: string): string {
+  const prefix = `${owner}/`;
+  return name.toLowerCase().startsWith(prefix.toLowerCase()) ? name.slice(prefix.length) : name;
+}
+
 // Create the user_search_history table
 export async function createTables() {
   try {
@@ -107,7 +114,7 @@ export async function getUserSearchHistory(userId: string): Promise<UserSearchHi
       id: row.id,
       userId: row.user_id,
       repoUrl: row.repo_url, // Map snake_case to camelCase
-      repoName: row.repo_name, // Map snake_case to camelCase
+      repoName: shortRepoName(row.repo_name, row.repo_owner),
       repoOwner: row.repo_owner, // Map snake_case to camelCase
       searchDate: row.search_date, // Keep as string, let component handle conversion
       explanation: row.explanation,
@@ -145,4 +152,43 @@ export async function clearUserSearchHistory(userId: string): Promise<void> {
     console.error('Error clearing user search history:', error);
     throw error;
   }
+}
+
+export interface ProfileActivity {
+  repoUrl: string;
+  repoName: string;
+  repoOwner: string;
+  searchDate: string;
+  language: string | null;
+  stars: number | null;
+}
+
+// Lightweight history rows for the profile page. Skips the stored explanation
+// text, which is the bulk of each row and is not shown there.
+export async function getUserActivity(userId: string): Promise<ProfileActivity[]> {
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT repo_url, repo_name, repo_owner, search_date,
+           metadata->>'language' AS language,
+           (metadata->>'stars')::int AS stars
+    FROM user_search_history
+    WHERE user_id = ${userId}
+    ORDER BY search_date DESC
+  `) as {
+    repo_url: string;
+    repo_name: string;
+    repo_owner: string;
+    search_date: string;
+    language: string | null;
+    stars: number | null;
+  }[];
+
+  return rows.map((row) => ({
+    repoUrl: row.repo_url,
+    repoName: shortRepoName(row.repo_name, row.repo_owner),
+    repoOwner: row.repo_owner,
+    searchDate: row.search_date,
+    language: row.language,
+    stars: row.stars,
+  }));
 }

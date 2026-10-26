@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import Link from "next/link";
-import AuthButton from "../components/AuthButton";
 import { Section } from "../components/Section";
 import { smoothScrollToRef } from "@/lib/utils";
 import { ExplainDepth, RepoMetadata } from "@/types";
 import { RepoChat } from "../components/RepoChat";
 import SearchHistory from "../components/SearchHistory";
-import Logo from "../components/Logo";
-import { ArrowLeft, ArrowsClockwise, Clock, Code, GitFork, Info, LinkSimple, Scales, Star, Warning } from "@phosphor-icons/react/dist/ssr";
+import Spotlight from "../components/Spotlight";
+import { ArrowsClockwise, Clock, Code, GitFork, Info, LinkSimple, Scales, Star, Warning } from "@phosphor-icons/react/dist/ssr";
+import SiteNav from "../components/SiteNav";
 
 const DEPTH_OPTIONS: { value: ExplainDepth; label: string; hint: string }[] = [
   { value: "quick", label: "Quick summary", hint: "Stack, features and how to run it" },
@@ -127,30 +126,11 @@ export default function ChatPage() {
   return (
     <div className="min-h-[100dvh] bg-slate-950">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-slate-800/70 bg-slate-950/85 backdrop-blur-md">
-        <nav className="mx-auto flex h-[68px] w-full max-w-content items-center justify-between gap-4 px-5 lg:px-8">
-          <Link href="/" className="flex min-w-0 items-center gap-2.5 text-slate-100">
-            <Logo size="sm" className="shrink-0 text-accent" />
-            <span className="hidden truncate text-[15px] font-medium tracking-tight sm:inline">
-              AI Explains This Repo
-            </span>
-          </Link>
-          <div className="flex shrink-0 items-center gap-1">
-            <Link
-              href="/"
-              className="flex items-center gap-1.5 rounded-md px-3 py-2 text-sm text-slate-300 transition-colors hover:text-slate-100"
-            >
-              <ArrowLeft size={15} weight="regular" />
-              <span>Home</span>
-            </Link>
-            <AuthButton />
-          </div>
-        </nav>
-      </header>
+      <SiteNav />
 
       <div className="mx-auto w-full max-w-content px-5 py-12 lg:px-8 lg:py-16">
         <div className="mx-auto max-w-2xl">
-          <h1 className="text-3xl font-medium tracking-[-0.02em] text-slate-50 sm:text-4xl">
+          <h1 className="animate-rise-in text-3xl font-medium tracking-[-0.02em] text-slate-50 sm:text-4xl">
             Analyze a repository
           </h1>
           <p className="mt-3 text-[15px] leading-relaxed text-slate-300">
@@ -159,14 +139,14 @@ export default function ChatPage() {
           </p>
 
           {/* Input Section */}
-          <div className="mt-8 rounded-md border border-slate-800 bg-slate-900/60 p-5">
+          <Spotlight className="animate-rise-in mt-8 rounded-md border border-slate-800 bg-slate-900/60 p-5" style={{ animationDelay: "80ms" }}>
             <div
               role="note"
               className="mb-3 flex items-start gap-2 rounded-md border border-slate-700/80 bg-slate-800/50 px-3 py-2.5 text-xs leading-relaxed text-slate-300"
             >
               <Info size={16} weight="regular" className="mt-px shrink-0 text-slate-400" />
               <span>
-                Works with public GitHub repositories only — private repos are
+                Works with public GitHub repositories only. Private repos are
                 not supported.
               </span>
             </div>
@@ -184,7 +164,7 @@ export default function ChatPage() {
                   if (e.key === "Escape") setRepoUrl("");
                 }}
                 placeholder="https://github.com/owner/name"
-                className="mt-2 w-full rounded-md border border-slate-700 bg-slate-950 px-3.5 py-3 pr-11 font-mono text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-colors focus:border-accent"
+                className="mt-2 w-full rounded-md border border-slate-700 bg-slate-950 px-3.5 py-3 pr-11 font-mono text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-[border-color,box-shadow] duration-200 hover:border-slate-600 focus:border-accent focus:shadow-[0_0_0_3px_rgb(163_230_53/0.15)]"
               />
               {/* Loading indicator when loading from history */}
               {loading && repoUrl && (
@@ -199,10 +179,10 @@ export default function ChatPage() {
                 {DEPTH_OPTIONS.map((option) => (
                   <label
                     key={option.value}
-                    className={`cursor-pointer rounded-md border px-3 py-2.5 transition-colors ${
+                    className={`cursor-pointer rounded-md border px-3 py-2.5 transition-all duration-200 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent ${
                       depth === option.value
                         ? "border-accent bg-accent/10"
-                        : "border-slate-700 hover:border-slate-500"
+                        : "border-slate-700 hover:-translate-y-px hover:border-slate-500 hover:bg-slate-800/40"
                     }`}
                   >
                     <input
@@ -221,7 +201,7 @@ export default function ChatPage() {
             </fieldset>
             <button
               onClick={handleExplain}
-              className="mt-3 w-full rounded-md bg-accent px-4 py-3 text-sm font-semibold text-slate-950 transition-all hover:bg-accent-dim active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+              className="btn-primary mt-3 w-full rounded-md bg-accent px-4 py-3 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-60"
               disabled={loading}
             >
               {loading ? (
@@ -233,41 +213,42 @@ export default function ChatPage() {
                 "Explain repository"
               )}
             </button>
-          </div>
+          </Spotlight>
         </div>
 
                  {/* Search History Section */}
-         <div className="max-w-4xl mx-auto mb-12">
+         <div className="mx-auto mb-12 mt-5 max-w-4xl">
            <SearchHistory onLoadSearch={handleLoadFromHistory} signedOutView="compact" />
          </div>
 
-         {/* Loading from History Indicator */}
-         {loading && repoUrl && (
-           <div className="max-w-2xl mx-auto mb-8">
-             <div className="bg-accent/10 border border-accent/30 text-slate-200 p-4 rounded-md backdrop-blur-sm text-center">
-               <div className="flex items-center justify-center gap-3">
-                 <div className="animate-spin rounded-full h-5 w-5 border-2 border-accent border-t-transparent"></div>
-                 <span className="text-sm font-medium">Loading repository from history...</span>
-               </div>
-             </div>
-           </div>
-         )}
-
-        
-         
-
-        
-
-        {/* Loading State */}
+        {/* Loading: a skeleton shaped like the report that is about to land */}
         {loading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm z-50">
-            <div className="text-center flex flex-col items-center">
-              <div className="relative mx-auto mb-6">
-                <div className="w-24 h-24 border-4 border-slate-800 rounded-full"></div>
-                <div className="absolute top-0 left-0 w-24 h-24 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
+          <div className="mx-auto max-w-4xl" role="status" aria-live="polite">
+            <p className="mb-4 flex items-center gap-2.5 text-sm text-slate-300">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:animate-none" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+              </span>
+              Reading the repository. This usually takes 10 to 30 seconds.
+            </p>
+            <div className="rounded-md border border-slate-800 bg-slate-900/60 p-6">
+              <div className="skeleton h-6 w-48" />
+              <div className="skeleton mt-3 h-4 w-3/4" />
+              <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-800 pt-5">
+                {[64, 56, 120, 80].map((w) => (
+                  <div key={w} className="skeleton h-8" style={{ width: w }} />
+                ))}
               </div>
-              <p className="text-slate-200 text-xl font-medium mb-2">Analyzing repository...</p>
-              <p className="text-slate-400 text-sm">This may take a few moments</p>
+            </div>
+            <div className="mt-8 space-y-4 rounded-md border border-slate-800 bg-slate-900/60 p-6 sm:p-8">
+              {[0, 1, 2].map((block) => (
+                <div key={block} className="rounded-md border border-slate-800/60 p-6">
+                  <div className="skeleton h-5 w-40" />
+                  <div className="skeleton mt-4 h-3.5 w-full" />
+                  <div className="skeleton mt-2.5 h-3.5 w-[92%]" />
+                  <div className="skeleton mt-2.5 h-3.5 w-2/3" />
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -316,11 +297,11 @@ export default function ChatPage() {
 
         {/* Results Section */}
         {(explanation || metadata) && !loading && (
-          <div className="max-w-4xl mx-auto" ref={explanationRef}>
+          <div className="animate-rise-in max-w-4xl mx-auto" ref={explanationRef}>
             {/* Repository Metadata Card */}
             {metadata && (
               <div className="mb-8">
-                <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/80 rounded-md p-6 shadow-2xl">
+                <Spotlight className="rounded-md border border-slate-800/80 bg-slate-900/60 p-6">
                   <div className="flex flex-col gap-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -328,7 +309,7 @@ export default function ChatPage() {
                           href={metadata.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xl sm:text-2xl font-bold text-slate-300 hover:text-slate-200 hover:underline break-words transition-colors duration-200"
+                          className="link-draw break-words text-xl font-semibold text-slate-100 transition-colors duration-200 hover:text-accent sm:text-2xl"
                         >
                           {metadata.name}
                         </a>
@@ -347,16 +328,16 @@ export default function ChatPage() {
                     </div>
                     
                     <div className="flex flex-wrap items-center gap-4 pt-2 border-t border-slate-800/80">
-                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
+                      <div className="flex items-center gap-2 rounded-md border border-transparent bg-slate-800/50 px-3 py-2 text-slate-300 transition-colors duration-200 hover:border-slate-700 hover:bg-slate-800">
                         <Star size={16} weight="regular" className="text-slate-400" />
                         <span className="text-slate-200 font-medium">{metadata.stars.toLocaleString()}</span>
                       </div>
-                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
+                      <div className="flex items-center gap-2 rounded-md border border-transparent bg-slate-800/50 px-3 py-2 text-slate-300 transition-colors duration-200 hover:border-slate-700 hover:bg-slate-800">
                         <GitFork size={16} weight="regular" className="text-accent" />
                         <span className="text-slate-200 font-medium">{metadata.forks.toLocaleString()}</span>
                       </div>
                       {metadata.lastCommitDate && (
-                        <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
+                        <div className="flex items-center gap-2 rounded-md border border-transparent bg-slate-800/50 px-3 py-2 text-slate-300 transition-colors duration-200 hover:border-slate-700 hover:bg-slate-800">
                           <Clock size={16} weight="regular" className="text-slate-400" />
                           <span className="text-sm">
                             Last commit: {new Date(metadata.lastCommitDate).toLocaleDateString()}
@@ -364,18 +345,18 @@ export default function ChatPage() {
                         </div>
                       )}
                       {metadata.language && (
-                        <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
+                        <div className="flex items-center gap-2 rounded-md border border-transparent bg-slate-800/50 px-3 py-2 text-slate-300 transition-colors duration-200 hover:border-slate-700 hover:bg-slate-800">
                           <Code size={16} weight="regular" className="text-slate-400" />
                           <span className="text-sm">{metadata.language}</span>
                         </div>
                       )}
-                      <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-md">
+                      <div className="flex items-center gap-2 rounded-md border border-transparent bg-slate-800/50 px-3 py-2 text-slate-300 transition-colors duration-200 hover:border-slate-700 hover:bg-slate-800">
                         <Scales size={16} weight="regular" className="text-slate-400" />
                         <span className="text-sm">{metadata.license ?? "No license"}</span>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Spotlight>
               </div>
             )}
 
@@ -388,9 +369,9 @@ export default function ChatPage() {
             <div className="text-center mt-8">
               <button
                 onClick={handleReset}
-                className="inline-flex items-center gap-2 px-6 py-3 text-slate-300 hover:text-slate-200 hover:bg-slate-800/50 rounded-md transition-all duration-200 text-base font-medium"
+                className="group inline-flex items-center gap-2 rounded-md border border-slate-800 px-5 py-2.5 text-sm font-medium text-slate-300 transition-all duration-200 hover:border-slate-600 hover:bg-slate-900 hover:text-slate-50"
               >
-                <ArrowsClockwise size={16} weight="regular" />
+                <ArrowsClockwise size={16} weight="regular" className="transition-transform duration-500 group-hover:rotate-180" />
                 <span>Analyze Another Repository</span>
               </button>
             </div>

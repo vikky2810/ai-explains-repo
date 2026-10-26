@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { PaperPlaneRight, Warning } from "@phosphor-icons/react/dist/ssr";
 import { ChatMessage } from "@/types";
 import { markdownComponents } from "./Section";
+import Reveal from "./Reveal";
 
 const SUGGESTED_QUESTIONS = [
   "Where is the main logic?",
@@ -55,7 +56,7 @@ export function RepoChat({ repoUrl }: { repoUrl: string }) {
 
   return (
     <div className="mt-8 rounded-md border border-slate-800/80 bg-slate-900/60 p-6 sm:p-8">
-      <h2 className="text-xl font-bold text-white">Ask about this repo</h2>
+      <h2 className="text-xl font-medium tracking-[-0.01em] text-slate-50">Ask about this repo</h2>
       <p className="mt-1 text-sm text-slate-400">
         Answers only use the files read from this repo.
       </p>
@@ -68,11 +69,13 @@ export function RepoChat({ repoUrl }: { repoUrl: string }) {
                 {m.content}
               </div>
             ) : (
-              <div key={i} className="rounded-md border border-slate-800/60 bg-slate-950/60 p-4 text-[15px]">
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                  {m.content}
-                </ReactMarkdown>
-              </div>
+              <Reveal key={i}>
+                <div className="rounded-md border border-slate-800/60 bg-slate-950/60 p-4 text-[15px]">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                    {m.content}
+                  </ReactMarkdown>
+                </div>
+              </Reveal>
             )
           )}
           {loading && (
@@ -92,7 +95,7 @@ export function RepoChat({ repoUrl }: { repoUrl: string }) {
               type="button"
               onClick={() => ask(q)}
               disabled={loading}
-              className="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-slate-500 hover:text-slate-100 disabled:opacity-60"
+              className="rounded-md border border-slate-700 px-3 py-1.5 text-sm text-slate-300 transition-all duration-200 hover:-translate-y-px hover:border-accent/50 hover:bg-accent/[0.06] hover:text-slate-50 active:translate-y-0 disabled:opacity-60"
             >
               {q}
             </button>
@@ -122,12 +125,12 @@ export function RepoChat({ repoUrl }: { repoUrl: string }) {
           onChange={(e) => setQuestion(e.target.value)}
           maxLength={500}
           placeholder="e.g. How is authentication handled?"
-          className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-950 px-3.5 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-colors focus:border-accent"
+          className="min-w-0 flex-1 rounded-md border border-slate-700 bg-slate-950 px-3.5 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-[border-color,box-shadow] duration-200 hover:border-slate-600 focus:border-accent focus:shadow-[0_0_0_3px_rgb(163_230_53/0.15)]"
         />
         <button
           type="submit"
           disabled={loading || !question.trim()}
-          className="flex items-center gap-2 rounded-md bg-accent px-4 py-3 text-sm font-semibold text-slate-950 transition-all hover:bg-accent-dim active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+          className="btn-primary flex items-center gap-2 rounded-md bg-accent px-4 py-3 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <PaperPlaneRight size={16} weight="bold" />
           <span className="hidden sm:inline">Ask</span>

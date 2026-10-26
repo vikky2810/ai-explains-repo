@@ -10,11 +10,12 @@ import {
 } from "@/lib/utils";
 import { SectionProps } from "@/types";
 import { MermaidDiagram } from "./MermaidDiagram";
+import Reveal from "./Reveal";
 
 export const markdownComponents: Components = {
   h2: ({ children }) => (
-    <h2 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
-      <span className="w-2 h-2 bg-accent rounded-full"></span>
+    <h2 className="mb-4 flex items-center gap-3 text-xl font-semibold text-slate-50">
+      <span className="h-4 w-px bg-accent transition-transform duration-300 group-hover:scale-y-150" />
       {children}
     </h2>
   ),
@@ -29,10 +30,10 @@ export const markdownComponents: Components = {
   ),
   li: ({ children }) => <li className="pl-1 leading-relaxed">{children}</li>,
   strong: ({ children }) => (
-    <strong className="text-white font-semibold">{children}</strong>
+    <strong className="hl font-semibold text-slate-50">{children}</strong>
   ),
   a: ({ children, href }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-accent underline-offset-2 hover:underline">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="link-draw text-accent">
       {children}
     </a>
   ),
@@ -78,26 +79,24 @@ export function Section({ title, markdown }: SectionProps) {
   const sections = splitMarkdownSections(markdown);
 
   return (
-    <div className="bg-slate-900/60 backdrop-blur-sm p-8 rounded-md shadow-2xl border border-slate-800/80">
-      <h2 className="text-2xl sm:text-3xl font-bold text-white mb-8 flex items-center gap-3">
-        <span className="text-3xl">{title.split(' ')[0]}</span>
-        <span className="text-slate-50">
-          {title.split(' ').slice(1).join(' ')}
-        </span>
+    <div className="rounded-md border border-slate-800/80 bg-slate-900/60 p-6 sm:p-8">
+      <h2 className="mb-8 text-2xl font-medium tracking-[-0.02em] text-slate-50 sm:text-3xl">
+        {title}
       </h2>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {sections.map((sec, i) => (
-          <div
-            key={i}
-            className={`rounded-md p-6 backdrop-blur-sm border border-slate-800/60 transition-all duration-200 hover:border-slate-700/80 ${
-              sectionColorClass(sec.heading)
-            }`}
-          >
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-              {`## ${boldHeading(sec.heading)}\n${sec.content}`}
-            </ReactMarkdown>
-          </div>
+          <Reveal key={i} delay={Math.min(i, 3) * 60}>
+            <div
+              className={`group rounded-md border border-slate-800/60 p-6 transition-colors duration-300 hover:border-slate-700 hover:bg-slate-900/40 ${
+                sectionColorClass(sec.heading)
+              }`}
+            >
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                {`## ${boldHeading(sec.heading)}\n${sec.content}`}
+              </ReactMarkdown>
+            </div>
+          </Reveal>
         ))}
       </div>
     </div>

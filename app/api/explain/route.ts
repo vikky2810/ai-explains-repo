@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
             await saveSearchHistory(
               userId,
               repoUrl,
-              metadata.name,
+              repo,
               owner,
               explanation,
               metadata

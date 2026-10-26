@@ -63,6 +63,261 @@ body {
   }
 }
 
+/*
+ * Marker highlight. A lime wash sweeps in behind the text from the left.
+ * `.hl` plays when an ancestor `.reveal` becomes `.is-revealed`; `.hl-now`
+ * plays on load (hero). The wash is low-alpha so text contrast is unchanged.
+ */
+.hl,
+.hl-now {
+  background-image: linear-gradient(
+    transparent 58%,
+    rgb(163 230 53 / 0.28) 58%,
+    rgb(163 230 53 / 0.28) 92%,
+    transparent 92%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding-inline: 0.08em;
+  margin-inline: -0.08em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hl,
+  .hl-now {
+    background-size: 0% 100%;
+    transition: background-size 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+    transition-delay: var(--hl-delay, 350ms);
+  }
+
+  .is-revealed .hl,
+  .hl-now.is-on {
+    background-size: 100% 100%;
+  }
+
+  /* Headline words rise in one after another on first paint. */
+  .word-rise {
+    display: inline-block;
+    animation: word-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+}
+
+@keyframes word-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* Underline that draws from the left on hover, for text links. */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition:
+    background-size 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.2s ease;
+}
+
+.link-draw:hover,
+.link-draw:focus-visible {
+  background-size: 100% 1px;
+}
+
+/*
+ * Cursor spotlight. `Spotlight` writes --mx / --my on pointermove (no React
+ * state), the ::before layer paints a soft lime glow at that point and the
+ * ::after layer lights the border under the cursor.
+ */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+
+.spotlight::before,
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.spotlight::before {
+  z-index: -1;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(163 230 53 / 0.07),
+    transparent 60%
+  );
+}
+
+.spotlight::after {
+  padding: 1px;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(163 230 53 / 0.55),
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.spotlight:hover::before,
+.spotlight:hover::after,
+.spotlight:focus-within::before {
+  opacity: 1;
+}
+
+/* Primary button: lifts, and a light band sweeps across on hover. */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgb(255 255 255 / 0.45) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -10px rgb(163 230 53 / 0.55);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+
+.btn-primary svg {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary:hover svg {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn-primary:hover:not(:disabled)::after {
+    transform: translateX(120%);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+/* Hero backdrop: a faint dot grid that fades out toward the edges. */
+.hero-grid {
+  background-image: radial-gradient(rgb(236 236 234 / 0.09) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 30% 35%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 30% 35%, #000 20%, transparent 75%);
+}
+
+/* Skeleton shimmer for loading states shaped like the final output. */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgb(38 38 42 / 0.7);
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(236 236 234 / 0.06), transparent);
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/*
+ * Travelling border for the analyzer card. A short lime arc orbits the edge
+ * so the one action on the page reads as live. The wrapper is the border
+ * (1px padding); the card sits inside it on a solid surface.
+ */
+@property --ring-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 200deg;
+}
+
+.ring-border {
+  padding: 1px;
+  background:
+    conic-gradient(
+      from var(--ring-angle),
+      transparent 0deg,
+      rgb(163 230 53 / 0.9) 40deg,
+      rgb(163 230 53 / 0.15) 90deg,
+      transparent 130deg
+    ),
+    linear-gradient(rgb(58 58 61 / 0.9), rgb(38 38 42 / 0.9));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ring-border {
+    animation: ring-spin 7s linear infinite;
+  }
+}
+
+@keyframes ring-spin {
+  to {
+    --ring-angle: 560deg;
+  }
+}
+
+/* Brief lime pulse when a sample repo is dropped into the input. */
+@media (prefers-reduced-motion: no-preference) {
+  .fill-flash {
+    animation: fill-flash 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes fill-flash {
+  0% {
+    box-shadow: 0 0 0 0 rgb(163 230 53 / 0.5);
+    border-color: rgb(163 230 53);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgb(163 230 53 / 0);
+  }
+}
+
 /* Every animation collapses to static under reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
